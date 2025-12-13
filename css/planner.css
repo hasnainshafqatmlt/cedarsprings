@@ -1,0 +1,932 @@
+   #loggedin-section {
+       display: none;
+   }
+
+
+   #successMsg {
+       color: #99c941 !important;
+       margin-top: 10px !important;
+       margin-bottom: 0;
+       font-size: 28px !important;
+   }
+
+   #successDescription {
+       color: #fff !important;
+       margin-top: 3px;
+       font-size: 12px;
+   }
+
+   .text-white {
+       color: #fff;
+   }
+
+   .instruction-row {
+       padding: 5px;
+       margin-bottom: 10px;
+       background: rgba(85, 80, 70, 0.65);
+       color: #FFF;
+   }
+
+   .modalButton {
+       text-align: center;
+   }
+
+   .modalButton>.btn {
+       margin: 5px;
+       font-family: Helvetica, Arial, Sans-Serif;
+       font-size: 16px;
+       color: #99C941;
+       border: solid 1px #99C941;
+       background-color: #fff;
+
+   }
+
+   #loggedin-section .instructions,
+   #buttonBox span.instructions {
+       font-size: 40px;
+       line-height: 1;
+       display: block;
+       padding-top: 20px;
+       padding-bottom: 0;
+       color: #eee;
+   }
+
+   #weekChoices {
+       font-size: 20px;
+       color: #ddd;
+   }
+
+   .credentials {
+       font-style: italic;
+   }
+
+   .invalid_credentials,
+   .server_error,
+   .ultracamp_error {
+       color: #f56f0f !important;
+       display: none;
+   }
+
+   #camper-section {
+       display: none;
+   }
+
+   #camper_choices {
+       color: white;
+   }
+
+   #camper_text {
+       display: none;
+   }
+
+   #week-section {
+       display: none;
+       /* starts hidden */
+   }
+
+   #week_text {
+       display: none;
+   }
+
+   #lunch-options,
+   #camp-choices {
+       display: flex;
+       flex-wrap: wrap;
+       justify-content: space-between;
+       align-content: flex-start;
+   }
+
+   #sibling-container {
+       display: flex;
+       flex-wrap: wrap;
+       justify-content: center;
+       align-content: flex-start;
+   }
+
+   .lunch-option,
+   .camp-option,
+   .sibling-option,
+   .friends-input-label {
+       color: white;
+       margin-left: 10px;
+       margin-right: 10px;
+       min-width: 170px;
+       font-weight: normal;
+   }
+
+   .lunch-option label,
+   .camp-option label,
+   .sibling-option label {
+       margin-left: 8px;
+       font-weight: normal;
+   }
+
+   .sibling-option {
+       text-align: center;
+   }
+
+   #camp-section {
+       display: none;
+   }
+
+   /* Styles brought in from the grid */
+
+   th.rotate {
+       /* Something you can count on */
+       height: 130px;
+       white-space: nowrap;
+       vertical-align: bottom !important;
+       font-weight: normal;
+   }
+
+   th.rotate>div {
+       transform:
+           /* Magic Numbers */
+           /* translate(25px, 51px) */
+           /* 45 is really 360 - 45 */
+           rotate(-90deg);
+       width: 30px;
+   }
+
+   th.rotate>div>span {
+       padding: 5px 10px;
+   }
+
+   .tableCell {
+       padding-left: 15px !important;
+       text-align: center;
+       vertical-align: middle !important;
+   }
+
+   .fullCamp {
+       /*background-color: #274b12;*/
+       background-color: #ddc33281 !important;
+   }
+
+   .unavailableCamp {}
+
+   .ineligibleCamp {
+       /*background-color: #200202;*/
+       background-color: #274b12 !important;
+   }
+
+   .activeCamp {
+       background-color: #dd8d3281 !important;
+       border: thin solid white !important;
+
+   }
+
+   .registeredCamp {}
+
+   .queuedCamp {
+       /*background-color: #0baf34; */
+       background-color: #dd8d3281 !important;
+   }
+
+   .registeredElsewhereCamp {}
+
+
+   p.fullText {
+       font-size: .7em !important;
+       vertical-align: middle !important;
+       display: inline-block;
+       margin: 0;
+       padding: 0;
+       color: #0FA514 !important;
+   }
+
+   p.WeekNumber {
+       padding: 0;
+       margin: 0;
+       color: #0FA514 !important;
+       font-size: 10px !important;
+   }
+
+   #legend {
+       width: 100%;
+       display: none;
+   }
+
+   #buttons {
+       width: 100%;
+       display: none;
+   }
+
+   .legend-row {
+       display: flex;
+       justify-content: center;
+       width: 100%
+   }
+
+   #legend #legend-header {
+       line-height: 1;
+       color: #eee;
+       font-size: 32px;
+       text-align: center;
+       margin-top: 5px;
+   }
+
+   #legend p.description {
+       color: #eee;
+       text-align: center;
+   }
+
+   .legend-holder {
+       margin: 15px 5px 0px 5px;
+       border: solid 3px #999;
+       height: 100%;
+       padding: 10px;
+       display: flex;
+       width: 50%;
+       align-items: center;
+       /* This aligns children vertically in the center */
+       justify-content: start;
+       /* This aligns children horizontally to the start */
+
+   }
+
+   .legend-text {
+       display: flex;
+       text-align: left;
+       width: 100%;
+   }
+
+   .legend-item {
+       vertical-align: middle;
+       width: 75px;
+       height: 75px;
+       text-align: center;
+       padding-top: 20px;
+       margin-right: 20px;
+   }
+
+   /* For the collapsing arrow */
+   #legend-header {
+       cursor: pointer;
+       user-select: none;
+   }
+
+   #arrow {
+       display: inline-block;
+       transition: transform 0.3s ease;
+   }
+
+
+
+   .btn-submit {
+       background: #5FB34A;
+       color: #fff;
+       height: 47px;
+       min-width: 313px;
+       border-radius: 6px;
+       font-weight: bold;
+       border: none;
+       font-size: 22px;
+   }
+
+   .btn-submit:hover {
+       background: #5FB34A;
+   }
+
+   .btn-info {
+       background: #3DC2E7;
+       color: #fff;
+       height: 47px;
+       min-width: 313px;
+       border-radius: 6px;
+       font-weight: bold;
+       border: none;
+       font-size: 22px;
+       padding-left: 12px;
+       padding-right: 12px;
+   }
+
+   .btn-info:hover {
+       background: #3DC2E7;
+   }
+
+   .btn-primary {
+       background: #3B89F0;
+       color: #fff;
+       height: 47px;
+       min-width: 313px;
+       border-radius: 6px;
+       font-weight: bold;
+       border: none;
+       font-size: 22px;
+       padding-left: 12px;
+       padding-right: 12px;
+   }
+
+   .btn-primary:hover {
+       background: #3B89F0;
+   }
+
+
+   p.WeekNumber>span {
+       font-size: 18px !important;
+   }
+
+   .rdoCampChoice,
+   .chkCampChoice {
+       width: 1.2em;
+       height: 1.2em;
+   }
+
+
+   span.noCampLabel {
+       font-style: italic;
+       font-weight: bold;
+   }
+
+   .camper-name {
+       font-size: 22px;
+   }
+
+   input.noCampLabel {
+       width: 1.0em;
+       height: 1.0em;
+   }
+
+   .glyphicon {
+       display: none;
+   }
+
+   /* for the "Still to be scheduled" row */
+
+
+   td.campName {
+       vertical-align: middle !important;
+       text-align: right;
+   }
+
+   .form-control.bio-info,
+   .form-control.detail-info {
+       background: transparent;
+       border: 2px solid rgba(255, 255, 255, 0.5);
+       height: 54px;
+       font-size: 18px;
+       font-weight: 300;
+       color: #FFF;
+   }
+
+   .form-control.bio-info:active,
+   .form-control.bio-info:focus {
+       outline: none;
+       border-color: #FADAAE;
+   }
+
+   .form-control.new-account {
+       width: 80%;
+   }
+
+   .form-control.detail-info:focus {
+       background: #403D38;
+       border-color: #FADAAE;
+   }
+
+   .form-group.new-account {
+       display: flex;
+   }
+
+   .form-group.new-account>* {
+       flex: 1;
+       text-align: left;
+   }
+
+   .required-field {
+       color: #f56f0f !important;
+       margin-left: 3px;
+   }
+
+   .form-group.new-account.has-error input {
+       border-color: #f56f0f !important;
+   }
+
+   .field-error {
+       color: #f56f0f;
+       font-size: 0.8em;
+       margin-top: 5px;
+       display: none;
+   }
+
+   .new-account-label>label {
+       padding-top: 10px;
+       color: white;
+       font-weight: normal;
+
+   }
+
+   .question-icon {
+       width: 20px;
+       margin-left: 10px;
+       filter: invert(99%) sepia(50%) saturate(2204%) hue-rotate(21deg) brightness(86%) contrast(80%);
+   }
+
+   .control-label.detail-info {
+       color: #FFF;
+       font-weight: normal;
+   }
+
+   .errorDescription {
+       color: #ff2000 !important;
+       font-size: .8em;
+       display: none;
+   }
+
+   .has-error>input {
+       /* This gets the text field */
+       border-color: #bb4442 !important;
+
+   }
+
+   #formValidationMsg {
+       color: #f20 !important;
+       margin-top: 15px;
+       margin-bottom: 15px;
+   }
+
+   .has-error>.glyphicon {
+       display: block;
+   }
+
+   .has-error>.errorDescription {
+       display: block;
+   }
+
+
+   #modal-image {
+       background-size: cover;
+       background-repeat: no-repeat;
+       background-position: center center;
+   }
+
+   optgroup.shuttle {
+       color: #2f9cf5;
+   }
+
+   optgroup.bus {
+       color: #f56f0f;
+   }
+
+   optgroup>option {
+       color: #fff;
+   }
+
+   h2.shuttleHeader,
+   h2.busHeader {
+       overflow: hidden;
+       font-size: 24px !important;
+   }
+
+   h2.shuttleHeader {
+       color: #2f9cf5;
+   }
+
+   h2.busHeader {
+       color: #f56f0f;
+   }
+
+   h2.shuttleHeader:after,
+   h2.busHeader:after {
+       content: "";
+       display: inline-block;
+       height: 0.5em;
+       vertical-align: bottom;
+       width: 75%;
+       margin-right: -100%;
+       margin-left: 10px;
+       border-top: 1px solid;
+   }
+
+   h2.shuttleHeader:after {
+       border-color: #2f9cf5;
+   }
+
+   h2.busHeader:after {
+       border-color: #f56f0f;
+
+   }
+
+   ul.shuttleList,
+   ul.busList {
+       line-height: 1.3;
+       margin-top: 10px;
+   }
+
+   ul.shuttleList li,
+   ul.busList li {
+       margin-top: 15px;
+   }
+
+   span.address {
+       font-size: small;
+   }
+
+   ul.shuttleList li::marker {
+       color: #2f9cf5;
+   }
+
+   ul.busList li::marker {
+       color: #f56f0f;
+   }
+
+   /* Removes bullet element from lists on bus descriptions coming in from Ultracamp */
+   #transportationDescription>ul {
+       list-style-type: none;
+       margin-top: 10px;
+   }
+
+   #transportationDescription>ul>li {
+       padding-bottom: 10px;
+   }
+
+   .accelTransportationGroup {
+
+       background-color: rgba(100, 100, 100, .3);
+       margin-top: 10px;
+       margin-bottom: 10px;
+       padding-top: 10px;
+
+   }
+
+   .accelTransportationGroup .description {
+       margin: 0 5%;
+   }
+
+   .server_success {
+       display: none;
+       background: #99C941 !important;
+       border-color: #99C941 !important;
+       color: #fff;
+   }
+
+   .btn-complete-registration {
+       margin-top: 5px;
+       font-family: Helvetica, Arial, Sans-Serif;
+       font-size: 16px;
+       background-color: #99C941;
+       color: #fff;
+       border: 1px solid #99C941;
+   }
+
+   .btn-complete-registration:hover,
+   .btn-complete-registration:focus,
+   .btn-complete-registration:active {
+       color: #fff !important;
+       border: 1px solid #ffffff;
+       background: none;
+   }
+
+   input[type="checkbox"].chkCampChoice:not(.campfire-night-checkbox) {
+       /* Keep existing checkbox styling */
+   }
+
+
+   .unavailableCamp label {
+       color: #666;
+   }
+
+   /* Update the styling to make overnight camps distinct in the list */
+   .camp-divider-row {
+       height: 20px;
+       background-color: rgba(67, 83, 147, 0.1);
+       /* Subtle blue tint */
+   }
+
+   .camp-section-label {
+       padding: 4px 10px;
+       font-weight: bold;
+       color: #444;
+       text-transform: uppercase;
+       font-size: 0.9em;
+       letter-spacing: 0.5px;
+   }
+
+   .clear-selection-row {
+       background-color: rgba(255, 50, 15, 0.2);
+       /* Tomato red with 10% opacity */
+   }
+
+   .clear-selection-row .campName {
+       border-left: 4px solid rgba(255, 50, 15, .5);
+       /* Left border indicator */
+   }
+
+   .overnight-camp-row {
+       background-color: rgba(67, 83, 147, 0.1);
+       /* Subtle blue tint */
+   }
+
+   .overnight-camp-row .campName {
+       border-left: 4px solid #435393;
+       /* Left border indicator */
+   }
+
+   .overnight-camp-row .tableCell {
+       background-color: rgba(67, 83, 147, 0.05) !important;
+       /* Slightly lighter cells */
+   }
+
+   .discount-camp-row {
+       background-color: rgba(46, 139, 87, 0.1);
+       /* Subtle green tint */
+   }
+
+   .discount-camp-row .campName {
+       border-left: 4px solid #2E8B57;
+   }
+
+   .discount-camp-row .tableCell {
+       background-color: rgba(46, 139, 87, 0.05);
+   }
+
+   /* For the highlight on Explorers */
+   tr.highlightedRow {
+
+       /* Subtle green tint */
+
+   }
+
+   .highlightedcampname {
+       color: #3B89F0 !important;
+   }
+
+
+   .camp-type-icon {
+       width: 16px;
+       height: 16px;
+       display: inline-block;
+       margin-right: 12px;
+       vertical-align: top;
+   }
+
+   .overnight-icon::before {
+       content: '🏕️';
+       /* Or use an icon font */
+   }
+
+   .discount-icon::before {
+       content: '🏷️';
+   }
+
+   .gapRow {
+       height: 10px;
+       border-top: 2px solid #ddd;
+       border-right: 0px;
+       border-left: 0px;
+       background-image: url(/images/wood_1.png);
+       background-position: 0px 0px;
+       padding-top: 0;
+   }
+
+
+   input[type="checkbox"].campfire-night-checkbox {
+       appearance: none;
+       -webkit-appearance: none;
+       width: 1.2em;
+       height: 1.2em;
+       border: 2px solid #3DC2E7;
+       border-radius: 50%;
+       outline: none;
+       padding: 4px;
+       background-color: white;
+       cursor: pointer;
+   }
+
+   input[type="checkbox"].campfire-night-checkbox:checked {
+       background-color: #fff;
+       position: relative;
+   }
+
+   input[type="checkbox"].campfire-night-checkbox:checked::before {
+       position: absolute;
+       content: "";
+       height: 0.8em;
+       width: 0.8em;
+       background-color: #3B89F0;
+       border-radius: 50%;
+       left: 50%;
+       top: 50%;
+       transform: translate(-50%, -50%);
+   }
+
+   .play-pass-registration-link {
+       display: inline-block;
+       background: #99C941;
+       color: white;
+       padding: 4px 10px;
+       border-radius: 4px;
+       text-decoration: none;
+       font-weight: bold;
+       font-size: small;
+   }
+
+   .play-pass-registration-link:hover {
+       background: white;
+       color: #99C941;
+   }
+
+   .playpass-button {
+       font-size: small;
+   }
+
+   .play-pass-header {
+       background-color: rgba(46, 139, 87, .5);
+   }
+
+
+
+   @media only screen and (max-width: 1250px) {
+
+       p.fullText {
+           font-size: xx-small !important;
+           margin: none;
+           padding: none;
+
+       }
+
+       td.campName,
+       p.WeekNumber>span,
+       .legend-text {
+           font-size: small !important;
+       }
+   }
+
+   @media only screen and (max-width: 1050px) {
+
+       .tableCell {
+           padding: 4px !important;
+       }
+
+       .rdoCampChoice,
+       .chkCampChoice {
+           width: 1em;
+           height: 1em;
+       }
+   }
+
+   @media only screen and (max-width: 850px) {
+       .container {
+           width: 100%;
+           margin-left: 10px;
+           padding-left: 0px;
+       }
+
+       #top-title {
+           padding: 0 30px;
+       }
+   }
+
+   .sr-only {
+       position: absolute;
+       width: 1px;
+       height: 1px;
+       margin: -1px;
+       padding: 0;
+       overflow: hidden;
+       clip: rect(0, 0, 0, 0);
+       border: 0;
+   }
+
+   .grid-table {
+       width: 100%;
+       background: #FFF8F0;
+       border: none;
+       box-shadow: none;
+       border-radius: 0 0 20px 20px;
+       overflow: hidden;
+   }
+
+   .grid-table .camper-name {
+       color: #3B89F0;
+   }
+
+   .grid-table .campName a {
+       color: #0FA514
+   }
+
+   .grid-table tr td {
+       border: none;
+   }
+
+   .grid-table tr:nth-child(2n) td.tableCell {
+       background-color: rgb(202 236 150 / 25%);
+   }
+
+   .grid-table tr:nth-child(2n-1) td.tableCell {
+       background-color: #fff
+   }
+
+   .grid-table tr td.tableCell.toBeScheduled {
+       background-color: transparent !important
+   }
+
+   .camper-heading {
+       font-size: 34px;
+       text-align: center;
+       margin-bottom: 25px;
+   }
+
+   .camper-head-guide {
+       display: flex;
+       background-color: #FFF8F0;
+       border-radius: 20px 20px 0 0;
+       padding: 20px 30px;
+       margin-bottom: 10px;
+   }
+
+   .camper-head-guide h2 {
+       font-size: 24px;
+       color: #3B89F0;
+       font-weight: bold;
+       white-space: nowrap;
+       margin-right: 70px;
+       margin-top: 2px;
+   }
+
+   .camper-guide-grid {
+       display: flex;
+       flex-wrap: wrap;
+       width: 100%;
+   }
+
+   .camper-guide-grid .guide-block {
+       display: flex;
+       width: 33.33%;
+       margin-bottom: 7px;
+       align-items: center;
+   }
+
+   .camper-guide-grid .guide-block span {
+       font-size: 10px;
+       font-weight: bold;
+   }
+
+   .guide-block .check-circle {
+       display: flex;
+       border-radius: 100%;
+       width: 26px;
+       height: 26px;
+       border: 2px solid #3DC2E7;
+       margin-right: 7px;
+   }
+
+   .guide-block .check-circle.available {
+       background-color: #fff;
+   }
+
+   .guide-block .check-circle.booked {
+       background-color: #3B89F0;
+   }
+
+   .guide-block .check-circle.conflict {
+       background-color: #D3D6CA;
+   }
+
+   .guide-block .check-circle.waiting-available {
+       background-color: #FFECAC;
+   }
+
+   .guide-block .check-circle.waiting-list {
+       background-color: #88DCF3;
+   }
+
+   .camper-hero-section {
+       display: flex;
+       flex-direction: column;
+       justify-content: center;
+       align-items: center;
+       min-height: 474px;
+       background-position: bottom center;
+       background-size: cover;
+       padding: 50px 20px;
+       width: 100%;
+   }
+
+   .camper-hero-section h2,
+   .camper-hero-section p {
+       color: #fff
+   }
+
+   .camper-hero-section h2 {
+       font-size: 24px;
+   }
+
+   .camper-hero-section .logout-link a {
+       font-size: 18px;
+       font-weight: bold;
+       text-decoration: underline;
+       text-transform: uppercase;
+       margin-bottom: 20px;
+       display: inline-block;
+   }
+
+   .camper-hero-section p {
+       font-size: 50px;
+       margin-bottom: 0;
+   }
+
+   .camper-hero-section button {
+       margin-bottom: 20px;
+   }

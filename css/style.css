@@ -1,0 +1,301 @@
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.gap-1 {
+    gap: 4px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.text-blue {
+    color: #3B89F0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.border-none {
+    border: none;
+}
+
+.pb-0 {
+    padding-bottom: 0;
+}
+
+/* Custom Login Plugin Styles */
+
+#login-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 52px;
+}
+
+#loginBox {
+    text-align: center;
+}
+
+.pricing {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3B89F0;
+    margin-bottom: 30px;
+    display: block;
+}
+
+#userEmail,
+#userPassword {
+    width: 100%;
+    padding: 5px 12px;
+    height: 32px;
+    margin: 8px 0;
+    border: none;
+    background-color: rgba(217, 217, 217, 0.5);
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#loginBtn {
+    width: 100%;
+    background: #0FA514;
+    color: white;
+    padding: 5px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+    font-weight: bold;
+}
+
+.login-field-block {
+    display: flex;
+    gap: 10px;
+}
+
+.login-field-block label {
+    width: 165px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+.btn-blue {
+    display: block;
+    width: 100%;
+    background: #3B89F0;
+    color: white;
+    padding: 5px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+    font-weight: bold;
+}
+
+.btn-blue:hover {
+    color: white;
+    background: #2f81ec;
+}
+
+.btn-green {
+    display: block !important;
+    width: 100% !important;
+    background: #5FB34A !important;
+    color: white !important;
+    padding: 9px 30px !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 22px !important;
+    cursor: pointer !important;
+    transition: background 0.3s ease !important;
+    font-weight: bold !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.btn-green:hover {
+    color: white !important;
+    background: #5FB34A !important;
+}
+
+#loginBtn:hover {
+    background: #0f8c14;
+}
+
+#loginBtn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.credentials {
+    color: #0073aa;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 10px 5px;
+}
+
+.credentials:hover {
+    text-decoration: underline;
+}
+
+.invalid_credentials,
+.server_error {
+    color: #d63638;
+    font-size: 14px;
+    margin: 10px 0;
+    display: block;
+}
+
+#loading-section {
+    text-align: center;
+    padding: 40px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+#loadingBox {
+    font-size: 18px;
+    color: #666;
+}
+
+#loggedin-section {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#campGrid {
+    margin-top: 20px;
+}
+
+#campGrid p {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.registration-second-wrapper {
+    background-image: url("/wp-content/uploads/2025/08/camp-bg-image.webp");
+    background-repeat: no-repeat;
+    background-position: center 0;
+    background-size: cover;
+    display: inline-block;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.registration-wrapper-container {
+    width: 687px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.registration-block {
+    background-color: #F2FAE5;
+    border-radius: 20px;
+    padding: 20px 0;
+    margin-top: 44px;
+    margin-bottom: 170px;
+}
+
+.registration-cell {
+    border-bottom: 4px solid #fff;
+    padding-bottom: 15px;
+    padding: 22px 100px 12px 66px;
+}
+
+.registration-cell:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.registration-block .heading {
+    color: #3B89F0;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 0;
+}
+
+.fh5co-flex {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.fh5co-flex select {
+    margin-bottom: 0;
+}
+
+.fh5co-flex .control-label {
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.fh5co-text p a {
+    color: #000;
+    text-decoration: underline;
+}
+
+.lunch-option {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.lunch-option label {
+    font-weight: bold;
+}
+
+.form-group .bio-info {
+    width: 100%;
+    border: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+
+    #login-section,
+    #loading-section,
+    #loggedin-section {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .pricing {
+        font-size: 28px;
+    }
+
+    #userEmail,
+    #userPassword {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    #loginBtn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
