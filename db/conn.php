@@ -140,13 +140,17 @@ class dbConnection
 
     function update($query, $param_type, $param_value_array)
     {
-        if (!$sql = $this->conn->prepare($query))
+        if (!$sql = $this->conn->prepare($query)) {
+            PluginLogger::log("Failed to prepare query. [ $query ] Error description: " . $this->conn->error);
             wp_die("Failed to prepare query. [ $query ] Error description: " . $this->conn->error);
+        }
+
 
         $this->bindQueryParams($sql, $param_type, $param_value_array);
         try {
             $sql->execute();
         } catch (Exception $e) {
+            PluginLogger::log("Failed to excecute SQL. Error description: " . $this->conn->error . $e->getMessage());
             wp_die("Failed to excecute SQL. Error description: " . $this->conn->error, 0, $e);
         }
 

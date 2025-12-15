@@ -1,0 +1,15 @@
+{
+  "name": "cscamp-login-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:css": "tailwindcss -c tailwind.config.js -i ./src/css/tailwind.css -o ./assets/css/tailwind.css --watch",
+    "build:css": "tailwindcss -c tailwind.config.js -i ./src/css/tailwind.css -o ./assets/css/tailwind.css --minify"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0"
+  }
+}
+

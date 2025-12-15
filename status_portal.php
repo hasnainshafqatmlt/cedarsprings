@@ -1,19 +1,7 @@
 <?php
-// Start session at the very beginning of the plugin
-add_action('init', 'start_session_early', 1);
-// require_once plugin_dir_path(__FILE__) . 'classes/PluginLogger.php';
-
-function start_session_early()
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-}
 
 // Landing page once logged into the camper queue status page 
 // March 2023 (BN)
-
-session_start();
 
 // // Use environment-based debug setting
 // require_once __DIR__ . '/../../../../tools/assets/EnvironmentLoader.php';
@@ -24,7 +12,7 @@ session_start();
 require_once plugin_dir_path(__FILE__) . 'classes/PluginLogger.php';
 require_once(plugin_dir_path(__FILE__) . 'counter/view_counter.php');
 $counter = new ViewCounter();
-$counter->recordVisit('/camps/summer/queue/status/portal.php', $_SERVER['REMOTE_ADDR']);
+$counter->recordVisit('/camps/queue/status', $_SERVER['REMOTE_ADDR']);
 
 // get the logger
 // require_once './../logger/plannerLogger.php';
@@ -43,9 +31,9 @@ if (
     !$validator->validate($_COOKIE['key'], $_COOKIE['account'])
 ) {
     // instruct the grid to collect login info without running to Ultracamp (a second time) to see if the UC session is valid
-    setCookie('reAuth', 'submitForm', time() + 3600, '/camps/summer/queue');
+    setCookie('reAuth', 'submitForm', time() + 3600, '/camps/queue');
     // send the browser back to the login page
-    header('Location: /camps/summer/queue/status/', true);
+    echo '<script>window.location.href = "/camps/queue/";</script>';
     return false;
 }
 
@@ -64,160 +52,239 @@ if (!empty($_SESSION['registrationPage']) && $_SESSION['registrationPage'] + 360
     }
 
     PluginLogger::log("d_bug:: Running account level import.");
-    require_once __DIR__ . '/../../../../tools/pages/reservations/camperQueue-AccountImport.php';
+    require_once(plugin_dir_path(__FILE__) . 'tools/pages/reservations/camperQueue-AccountImport.php');
     unset($_SESSION['registrationPage']);
 }
 
 
 // load the classes specific to the portal
-// require_once './../classes/PortalView.php';
-// $view = new PortalView($logger);
+require_once(plugin_dir_path(__FILE__) . 'classes/PortalView.php');
+$view = new PortalView();
 
 ?>
+<!-- Modal -->
 
-
-<div id="fh5co-container">
-    <div id="fh5co-home" class="js-fullheight" data-section="home">
-
-        <div class="p-rel">
-
-            <div class="fh5co-overlay"></div>
-            <div class="is-coming-main ">
-                <div class="container-is-coming p-rel">
-                    <div class="row">
-
-                        <img class="to-animate" src="/wp-content/uploads/2025/12/cedar-springs-logo.png" style="width:20%; max-width:500px;">
-                        <br /> <br />
-
-                        <h2 class="to-animate">
-                            Summer Camp Registration Opens January 1<sup>st</sup>!
-                        </h2>
-                    </div>
-
-                    <div class="to-animate time-counter-block">
-
-                        <div class="col-md-1 col-md-offset-4 "><span id="countdownDay" class="countdownValue"></span><br />
-                            <span class="countdownLbl">days</span>
-                        </div>
-
-                        <div class="col-md-1"><span id="countdownHour" class="countdownValue"></span><br />
-                            <span class="countdownLbl">hours</span>
-                        </div>
-
-                        <div class="col-md-1"><span id="countdownMinute" class="countdownValue"></span><br />
-                            <span class="countdownLbl">min</span>
-                        </div>
-
-                        <div class="col-md-1"><span id="countdownSecond" class="countdownValue"></span><br />
-                            <span class="countdownLbl">sec</span>
-                        </div>
-
-                    </div>
-
-                    <div class="to-animate row" style="margin-top: 25px">
-                        <a href="../mail" class="btn btn-primary ">Join the Mailing List</a>
-                    </div>
-                    <div class="to-animate row" style="margin-top: 25px">
-                        <a href="../summer" class="btn btn-primary ">View the Summer Catalog</a>
-                    </div>
-                    <!--
-                            <div class="to-animate row" style="margin-top: 25px">
-                                <a href="../../brochure" class="btn btn-primary ">The 2024 Summer Brochure</a>
-                            </div>
-                            -->
-
-                </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">...</h4>
             </div>
-
-
-
-        </div>
-
-    </div>
-
-
-    <!--		
-		<div id="fh5co-type" data-section="book" style="background-image: url(/images/wood_2.jpg);" data-stellar-background-ratio="1">
-            <div class="fh5co-overlay"></div>
-            <div class="container">
-                <div class="row text-center fh5co-heading row-padded">
-                    <h2 class="heading" style="color:#ffffff;">Things to do while you wait</h2>
-                </div>
-
+            <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="fh5co-type">
-                            <a href="/camps/summer"><h3 class="with-icon icon-1">Preview Day Camps for 2024</h3></a>
-                            <p>Take an advanced look at the camp options available for 2024!</p>
-                            <a href="/camps/summer" class="btn btn-primary btn-outline">Explore</a>
+                    <!-- Dialog Box Message Lands Here via JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="fh5co-featured" style="background-image: url(/images/wood_1.png); background-position: 0px 0px; background-ratio:0; padding: 0;">
+
+    <div class="container">
+
+        <div class="row">
+            <div id="camps-wrapper" class="fh5co-grid">
+
+                <!-- Active Options -->
+                <?php if ($view->activeQueueCount > 0) : ?>
+                    <div class="fh5co-v-half camp-row tw-bg-[#FFF8F0] tw-py-6 tw-px-8 tw-rounded-[20px] tw-mb-6" id="activeElementRow">
+                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/summer/images/contact-us-grid.jpg)"></div>
+                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
+                            <span class="pricing">There is space Available!</span>
+
+                            <p class="description no-top-padding">Your patience on the camper queue has paid off and there is now space available. Select which camps you would like to register for.</p>
+                            </p>
+                            <form id="frmActive" method="post" action="./../submitCamperQueue.php" onSubmit='return validateActiveForm();'>
+                                <div class="activeListingContainer" id="activeElementContainer">
+                                    <?= $view->createActiveQueueHTML(); ?>
+                                </div>
+                                <span class="errorDescription" id="frmValidationErrorMsg">Please choose a camp to register.<br /></span>
+                                <input type="submit" class="btn btn-title-action btn-outline no-top-padding" id="submitBtn" value="Register" />
+                            </form>
+
                         </div>
                     </div>
+                <?php endif; ?>
 
-                    <div class="col-md-6">
-                        <div class="fh5co-type">
-                            <a href="/parties/"><h3 class="with-icon icon-7">Book a Party</h3></a>
-                            <p>Host a Battlefield Live laser tag party or get-together with us!</p>
-                            <a href="/camps/" class="btn btn-primary btn-outline">Party!</a>
+
+                <!-- Instructions -->
+                <div class="fh5co-v-half camp-row tw-bg-[#FFF8F0] tw-py-6 tw-px-8 tw-rounded-[20px] tw-mb-6">
+                    <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
+                        <span class="pricing">Schedule and Queue Status</span>
+
+                        <p class="description no-top-padding">Your family's summer schedule and queue status is listed below. If you would like to make additional registrations, or add your campers to additional queues, <a href="./../">return to the camper queue</a>.</p>
+                        <p class="description">For camps which your campers are in queue, you can cancel their place on the queue, removing them completely; you can snooze them on the queue, skipping any available space for the upcoming week; or you can re-activate expired queues, returning your camper to the top of the list for camps in which an available space was not claimed.</p>
+
+                    </div>
+                    <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/daycamps/images/kids_hike.jpg)"></div>
+
+                </div>
+
+                <!-- Family Status Elements -->
+
+                <?= $view->createPendingQueueHTML(); ?>
+
+
+            </div>
+        </div>
+
+        <!-- Ultracamp and FAQ Links -->
+        <div class="row" style="margin-bottom:30px;">
+            <div class="fh5co-grid">
+                <div class="fh5co-v-half">
+                    <div class="fh5co-h-row-2 fh5co-reversed">
+                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/images/computer.jpg)"></div>
+                        <div class="fh5co-v-col-2 fh5co-text arrow-right">
+                            <span class="pricing">Your Registration Account</span>
+                            <p>You can also log directly into your Ultracamp registration account to update your family's information, modify existing reservations and register for camps individually.</p>
+                            <?php
+                            if (!empty($_COOKIE['uc-token'])) :
+                            ?>
+                                <a href="https://www.ultracamp.com/sso/login.aspx?idCamp=107&tkn=<?= $_COOKIE['uc-token']; ?>" target="_BLANK" class="btn btn-collage-action btn-outline" id="ucLogin-button">Access<br />Ultracamp</a>
+                            <?php
+                            else:
+                            ?>
+                                <a href="https://www.ultracamp.com/clientlogin.aspx?idCamp=107&campCode=CP7" target="_BLANK" class="btn btn-collage-action btn-outline" id="ucLogin-button">Login To<br />Ultracamp</a>
+
+                            <?php
+                            endif;
+                            ?>
                         </div>
                     </div>
                 </div>
 
+                <div class="fh5co-v-half">
+                    <div class="fh5co-h-row-2">
+                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/daycamps/images/pnw-trails.jpg)"></div>
+                        <div class="fh5co-v-col-2 fh5co-text arrow-left">
+                            <span class="pricing">F.A.Q. &amp; Other Details</span>
+                            <p>There is a lot of information available about what camp looks like. Check out our knowledge base for answers to many of the frequently asked questions.</p>
+                            <a href="/welcome" class="btn btn-collage-action btn-outline">Explore</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    -->
-    <div id="contact-wrap"></div>
-
+    </div>
 </div>
+</div>
+<div id="contact-wrap"></div>
+
 
 <?php
 // <!-- Bootstrap DateTimePicker -->
-wp_enqueue_script('custom-moment-js', plugin_dir_url(__FILE__) . 'js/plugin/moment.js', array('jquery'), '1.0.0', true);
-wp_enqueue_script('custom-bootstrap-datetimepicker-min-js', plugin_dir_url(__FILE__) . 'js/plugin/bootstrap-datetimepicker.min.js', array('jquery'), '1.0.0', true);
+wp_enqueue_script('bootstrap-min-js', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', array('jquery'), '2.0.0', true);
+wp_enqueue_script('portalConfirmationDialog-js', plugin_dir_url(__FILE__) . 'js/portalConfirmationDialog.js', array('jquery'), '1.0.0', true);
+wp_enqueue_style('bootstrap-modal-css', plugin_dir_url(__FILE__) . 'css/bootstrap-modal.css', array(), '1.0.0');
 ?>
 
 <script>
-    function CountDownTimer() {
-        var now = new Date();
-        var year = now.getFullYear();
-        var month = now.getMonth() + 1; // JavaScript months are 0-11
-        var day = now.getDate();
+    var defaultContactFormTopic = "Day Camps";
 
-        // Determine if the current date is within the window
-        var isWithinWindow = (month === 1 && day >= 1) || (month > 1 && month < 8) || (month === 8 && day <= 30);
-
-        // Set the target date to the next January 1st
-        var targetYear = year + 1;
-        var end = new Date(`1/1/${targetYear} 12:00 AM`);
-
-        var _second = 1000;
-        var _minute = _second * 60;
-        var _hour = _minute * 60;
-        var _day = _hour * 24;
-        var timer;
-
-        function showRemaining() {
-            var now = new Date();
-            var distance = end - now;
-            if (distance < 0) {
-                clearInterval(timer);
-                window.location.replace("/camps/summer/queue");
-                console.log("Redirecting to camps page as we're within the registratin window.")
-                return;
-            }
-
-            var days = Math.floor(distance / _day);
-            var hours = Math.floor((distance % _day) / _hour);
-            var minutes = Math.floor((distance % _hour) / _minute);
-            var seconds = Math.floor((distance % _minute) / _second);
-
-            document.getElementById('countdownDay').innerHTML = days;
-            document.getElementById('countdownHour').innerHTML = hours;
-            document.getElementById('countdownMinute').innerHTML = minutes;
-            document.getElementById('countdownSecond').innerHTML = seconds;
+    function validateActiveForm() {
+        // confirm at least one check box is checked
+        if ($("#frmActive input:checkbox:checked").length > 0) {
+            // any one is checked
+            $('#frmValidationErrorMsg').hide();
+            $('#submitBtn').val('Loading...');
+            $('#submitBtn').prop('disabled', true);
+            return true;
         }
 
-        timer = setInterval(showRemaining, 1000);
+        // Display an error
+        $('#frmValidationErrorMsg').show();
+        return false;
+
     }
 
-    CountDownTimer();
+    function takeAction(id, action) {
+        $("#myModal")
+            .find(".modal-body")
+            .html(
+                '<img src="../../images/loading-animated.svg" id="loading-img" /> Loading</span>'
+            );
+
+        const formData = {
+            action: action,
+            id: id,
+            account: getCookie("account"),
+            key: getCookie("key"),
+        };
+
+        // run an ajax lookup for the camp info - then display the dialog box
+        $.ajax({
+                type: "POST",
+                url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                data: {
+                    // action: 'putQueueActions',
+                    ...formData
+                }, // our data object
+                dataType: "json",
+            })
+            .done(function(data) {
+                if (data.Authenticated !== true) {
+                    setCookie("reAuth", "queue-management");
+                    returnToHomepage();
+                }
+
+                // re-draw the modified elements of the webpage
+
+                // ensure action was taken
+                if (data.result == 0) {
+                    console.log(
+                        "While there was no apparent error, no work was done either."
+                    );
+                    return true;
+                }
+
+                switch (data.action) {
+                    case "cancel":
+                        // remove the entire queue element
+                        $("#status-" + data.id).remove();
+                        $("#container-" + data.id).remove();
+                        break;
+
+                    case "reactivate":
+                        // remove the text refering to the element as expired
+                        $("#expiredtext-" + data.id).remove();
+                        $("#expireddetail-" + data.id).remove();
+                        $("#reactivatebtn-" + data.id).remove();
+                        break;
+
+                    case "snooze":
+                        // hide both the active elements
+                        $("#chkcontainer-" + data.id).remove();
+                        $("#activetextbox-" + data.id).remove();
+                        // if we emptied the active section, hide it
+                        if (
+                            $("#activeElementContainer .listingCheckboxContainer").length == 0
+                        ) {
+                            $("#activeElementRow").remove();
+                        }
+
+                        // add a snoozed until date to the pending section
+                        $("#addedtext-" + data.id).append(
+                            '<p class="addedDate">Snoozed for 1 Week</p>'
+                        );
+                        // remove the snooze button on the pending section
+                        $("#snoozeBtn-" + data.id).remove();
+                }
+
+                $("#myModal").modal("hide");
+                return true;
+            })
+            .fail(function(data) {
+                modal.find(".modal-title").text("There was an error...");
+                modal
+                    .find(".modal-body")
+                    .html(
+                        "Something has gone wrong when attempting to update the status of your camper queue entry. Please try again."
+                    );
+            });
+    }
 </script>

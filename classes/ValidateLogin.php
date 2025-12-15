@@ -39,17 +39,17 @@ class ValidateLogin
         $account = FILTER_VAR($account, FILTER_SANITIZE_STRING);
 
         if (!isset($key) || !isset($account)) {
-            $this->logger->error("Missing API key ($key) or account number ($account) in the validate login process.");
+            PluginLogger::log("Error:: Missing API key ($key) or account number ($account) in the validate login process.");
             return false;
         }
 
-        //$this->logger->d_bug("Validating key / account", array($key, $account));
+        //PluginLogger::log("debug:: Validating key / account", array($key, $account));
 
         try {
             $result = $this->cart->validateAccountKey($key, $account);
         } catch (Exception $e) {
-            $this->logger->error('Unable to validate the api key: ' . $e->getMessage());
-            $this->logger->error("UC Response: ", $result);
+            PluginLogger::log('Error:: Unable to validate the api key: ' . $e->getMessage());
+            PluginLogger::log("Error:: UC Response: ", $result);
             return false;
         }
 
@@ -57,7 +57,7 @@ class ValidateLogin
             return true;
         }
 
-        $this->logger->d_bug("Failed to validate the ultracamp API Key", $result);
+        PluginLogger::log("debug:: Failed to validate the ultracamp API Key", $result);
         return false;
     }
 
@@ -69,12 +69,12 @@ class ValidateLogin
 
         // UC doesn't validate that I sent in a person, and seems to want to return our entire database
         if (empty($camper) || !is_numeric($camper)) {
-            $this->logger->error("No camper ID was provided in validateCamper().");
+            PluginLogger::log("Error:: No camper ID was provided in validateCamper().");
             return false;
         }
 
         if (empty($account) || !is_numeric($account)) {
-            $this->logger->error("No account ID was provided in validateCamper().");
+            PluginLogger::log("Error:: No account ID was provided in validateCamper().");
             return false;
         }
 
@@ -101,16 +101,16 @@ class ValidateLogin
                 continue;
             }
 
-            $this->logger->d_bug("Testing Camper " . $e[1] . " against account " . $account . ".");
+            PluginLogger::log("debug:: Testing Camper " . $e[1] . " against account " . $account . ".");
             if ($this->validateCamper($account, $e[1])) {
                 $people[] = $e[1]; // save the camper to the list of those checked so we don't check them again
             } else {
-                $this->logger->error("Camper " . $e[1] . " was found to not be associated with account " . $account . ".");
+                PluginLogger::log("Error:: Camper " . $e[1] . " was found to not be associated with account " . $account . ".");
                 return false; // if the check fails, stop checking more and just fail the test
             }
         }
 
-        $this->logger->d_bug("Tested " . count($people) . " people in " . count($entries) . " entries - all are account members.");
+        PluginLogger::log("debug:: Tested " . count($people) . " people in " . count($entries) . " entries - all are account members.");
         return true; // they all passed
     }
 }

@@ -42,6 +42,8 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_get_summer_schedule', array($this, 'handle_get_summer_schedule_ajax'));
         add_action('wp_ajax_get_camp_capacities', 'get_camp_capacities_callback');
         add_action('wp_ajax_nopriv_get_camp_capacities', 'get_camp_capacities_callback');
+        add_action('wp_ajax_cancel', 'handle_putQueueActions_ajax');
+        add_action('wp_ajax_nopriv_cancel', 'handle_putQueueActions_ajax');
     }
 
     public function init()
@@ -60,6 +62,17 @@ class CustomLoginPlugin
     public function enqueue_scripts()
     {
         wp_enqueue_script('jquery');
+
+        // Tailwind compiled CSS (prefixed to avoid conflicts)
+        $tailwind_path = plugin_dir_path(__FILE__) . 'assets/css/tailwind.css';
+        if (file_exists($tailwind_path)) {
+            wp_enqueue_style(
+                'cscamp-tailwind',
+                plugin_dir_url(__FILE__) . 'assets/css/tailwind.css',
+                array(),
+                filemtime($tailwind_path)
+            );
+        }
 
         wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '1.0.0', true);
         wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
@@ -310,6 +323,18 @@ class CustomLoginPlugin
 
     public function summer_is_coming_shortcode($atts)
     {
+        // Start session at the very beginning of the plugin
+        add_action('init', 'start_session_early', 1);
+        // require_once plugin_dir_path(__FILE__) . 'classes/PluginLogger.php';
+
+        function start_session_early()
+        {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+        }
+
+
         if (is_admin()) return;
 
         ob_start();
@@ -319,9 +344,8 @@ class CustomLoginPlugin
     public function status_portal_shortcode($atts)
     {
         if (is_admin()) return;
-
         ob_start();
-        // include plugin_dir_path(__FILE__) . 'status_portal.php';
+        include plugin_dir_path(__FILE__) . 'status_portal.php';
         return ob_get_clean();
     }
 }
@@ -354,5 +378,10 @@ add_action('wp', function () {
 function get_camp_capacities_callback()
 {
     include plugin_dir_path(__FILE__) . 'ajax/campCapacities.php';
+    wp_die();
+}
+function handle_putQueueActions_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/putQueueActions.php';
     wp_die();
 }

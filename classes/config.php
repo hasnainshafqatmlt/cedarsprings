@@ -11,7 +11,11 @@ require_once(__DIR__ . '/../tools/SeasonalConfigElements.php');
 // the two files have the same information in them.
 class CQConfig extends SeasonalConfigElements
 {
-    function __construct() {}
+    function __construct($logger = null)
+    {
+        parent::__construct($logger);
+        // PluginLogger::log('config-class', get_class($tables));
+    }
 }
 
 

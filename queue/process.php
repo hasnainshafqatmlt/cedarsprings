@@ -298,31 +298,42 @@ if ($displayActiveQueue || $displayRegistration || $campAddOn) {
             }
         }
     }
-    $result1 = $cart->addEntriesToCart($_COOKIE['account'], $cartOptions);
-
-    PluginLogger::log("Cart Options::" . print_r($cartOptions, true));
-    PluginLogger::log("addEntriesToCart::" . $result1);
-    PluginLogger::log("COOKIE::" . print_r($_COOKIE, true));
-    PluginLogger::log("boolean::" . !empty($cartOptions) . '&&' . !$cart->addEntriesToCart($_COOKIE['account'], $cartOptions));
+    $addResult = $cart->addEntriesToCart($_COOKIE['account'], $cartOptions);
 
     // if we gt a false back from the add entries, something errored out. The log file will have the details, but we need to store the 
     // reservation information into the camper queue and alert the customer to the error.
     // However, don't even try if there are not any options to store - this could be the result of a reservation with only change orders
-    if (!empty($cartOptions) && !$cart->addEntriesToCart($_COOKIE['account'], $cartOptions)) {
-
-        // hide the success messages (we leave the camper queue success messages alone as this doesn't impact them)
+    if (!empty($cartOptions) && $addResult === false) {
+        // hide the success messages (we leave the camper queue success messages alone)
         $displayRegistration = false;
         $displayActiveQueue = false;
         // show the error message
         $displayError = true;
 
-        // re-run the queue work, with errorRecovery = true to convert registration requests into queue requests
-        PluginLogger::log("warning:: This following reservations were saved to the queue as a result of the failed attempt to process the reservation.");
+        PluginLogger::log("warning:: This following reservations were saved to the queue due to failed reservation processing.");
+
+        // Save each as queue entries
         foreach ($_SESSION['formInput'] as $form) {
             $waitlists->saveEntries($_COOKIE['account'], $form, true);
-            PluginLogger::log("warning:: Queue Entry: " . print_r($form, true));
+            PluginLogger::log("warning:: Queue Entry: " . $form);
         }
     }
+
+    // if (!empty($cartOptions) && !$cart->addEntriesToCart($_COOKIE['account'], $cartOptions)) {
+
+    //     // hide the success messages (we leave the camper queue success messages alone as this doesn't impact them)
+    //     $displayRegistration = false;
+    //     $displayActiveQueue = false;
+    //     // show the error message
+    //     $displayError = true;
+
+    //     // re-run the queue work, with errorRecovery = true to convert registration requests into queue requests
+    //     PluginLogger::log("warning:: This following reservations were saved to the queue as a result of the failed attempt to process the reservation.");
+    //     foreach ($_SESSION['formInput'] as $form) {
+    //         $waitlists->saveEntries($_COOKIE['account'], $form, true);
+    //         PluginLogger::log("warning:: Queue Entry: " . print_r($form, true));
+    //     }
+    // }
 
     // Because a reservation of only change orders can get this deep, don't try to close an empty cart
     if (!empty($cartOptions)) {

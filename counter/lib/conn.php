@@ -3,9 +3,11 @@
 class CounterDBController
 {
 	private $host = "localhost";
-	private $password = "root";
+	// private $password = "LimpidSnoutFreedEver87";
+	private $password = "root"; // "LimpidSnoutFreedEver87";
 	private $conn;
-	private $user = "root";
+	// private $user = "cscamp_counter";
+	private $user = "root"; // "cscamp_counter";
 	private $database = "cscamp_view_counter";
 
 	function __construct()
