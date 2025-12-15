@@ -356,7 +356,7 @@ new CustomLoginPlugin();
 // Conditionally enqueue camp queue form assets if the shortcode is present
 add_action('wp', function () {
     global $post;
-    if (isset($post) && has_shortcode($post->post_content, 'custom_camp_queue_form')) {
+    if (isset($post) && (has_shortcode($post->post_content, 'custom_camp_queue_form'))) {
 
         wp_enqueue_style('custom-camp-planner-css', plugin_dir_url(__FILE__) . 'css/planner.css', array(), '1.0.0');
     }

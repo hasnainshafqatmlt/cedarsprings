@@ -24,7 +24,7 @@ $("#myModal").on("show.bs.modal", function (event) {
             " for the week of " +
             msg["week"] +
             "?<br /><br />" +
-            '<div class="modalButton" ><button class="btn" onclick="takeAction(\'' +
+            '<div class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" ><button class="btn" onclick="takeAction(\'' +
             msg["id"] +
             "', 'snooze')\">Yes</button> " +
             '<button class="btn" data-dismiss="modal" >No</button></div>'
@@ -43,7 +43,7 @@ $("#myModal").on("show.bs.modal", function (event) {
             " for the week of " +
             msg["week"] +
             "?<br /><br />" +
-            '<div class="modalButton" ><button class="btn"onclick="takeAction(\'' +
+            '<div class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" ><button class="btn"onclick="takeAction(\'' +
             msg["id"] +
             "', 'cancel')\">Yes</button> " +
             '<button class="btn" data-dismiss="modal" >No</button></div>'
@@ -63,7 +63,7 @@ $("#myModal").on("show.bs.modal", function (event) {
             " for the week of " +
             msg["week"] +
             "?<br /><br />" +
-            '<div class="modalButton" ><button class="btn" onclick="takeAction(\'' +
+            '<div class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" ><button class="btn" onclick="takeAction(\'' +
             msg["id"] +
             "', 'reactivate')\">Yes</button> " +
             '<button class="btn" data-dismiss="modal" >No</button></div>'

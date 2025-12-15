@@ -368,6 +368,7 @@ class CartAndUser extends UltracampModel
             $this->do_action('after_ultracamp_cart_process', $this, [$reservationId]);
         }
 
+        return $result;
         return PluginLogger::log("Debug ::" . "Reservation Response Code: $result");
     }
 

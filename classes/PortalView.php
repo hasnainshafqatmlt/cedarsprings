@@ -197,9 +197,9 @@ class PortalView
 
             if (empty($camper['registered']) && empty($camper['queued'])) {
                 // display a message stating that there isn't anything to see for this camper
-                $html .= "<p style='color:white; font-size:16px !important; margin-bottom:5px;'>There are no registrations or queued camps for " . $camper['first'] . ".</p>";
+                $html .= "<p class=' tw-text-sm'>There are no registrations or queued camps for " . $camper['first'] . ".</p>";
                 $html .= '<a href="./../" class="btn btn-title-action btn-outline no-top-padding go-back-button" >View Registration Options</a>';
-                $html .= "</div>\n</div>\n\n";
+                $html .= "</div>\n</section>\n\n";
                 continue;
             }
 
@@ -211,10 +211,9 @@ class PortalView
             // if we're here, then there is something to display - loop through the weeks and display anything found
             $html .= '<table class="tw-w-full tw-bg-white border-collapse tw-border-collapse tw-rounded-tl-[5px] tw-rounded-tr-[5px] tw-overflow-hidden">';
             $html .= '<tr class=" tw-bg-[#3B89F0] tw-text-white tw-text-sm tw-font-bold">';
-            $html .= '<th class="tw-py-2 tw-px-2 tw-text-left">DATE</th>';
-            $html .= '<th class="tw-py-2 tw-px-2">CAMP</th>';
-            $html .= '<th class="tw-py-2 tw-px-2">STATUS</th>';
-            $html .= '<th class="tw-py-2 tw-px-2">ACTION</th>';
+            $html .= '<th class="tw-py-2 tw-px-4 tw-text-left">DATE</th>';
+            $html .= '<th class="tw-py-2 tw-px-4">CAMP</th>';
+
             $html .= '</tr>';
             for ($w = 1; $w <= 12; $w++) {
                 $registered     = isset($camper['registered'][$w])     ? $camper['registered'][$w]     : null;
@@ -229,21 +228,14 @@ class PortalView
 
                 // there is something here, so build the div block for the week
                 $image = $this->getQueueImage($camper, $w, $personId);
-
-                $html .= '<tr class="fh5co-v-half camp-row border-b tw-border-[#D9D9D9] tw-text-sm">
-                            <td class="tw-px-2">' . $this->CQModel->getWeek($w) . ' </td>
-                            <td class="tw-px-2"> </td>
-                            <td class="tw-px-2"> </td>
+                // add the camper's name and the week for which we're displaying information
+                $html .= '<tr class="fh5co-v-half camp-row border-b tw-border-[#D9D9D9] tw-text-sm">                            
+                            <td class="tw-px-4">' . $this->CQModel->getWeek($w) . ' </td>
                             
-                            <td class="tw-px-2">
+                            <td class="tw-px-4 tw-text-center">
                                 <div class="fh5co-v-col-2 fh5co-bg-img queued-image" style="background-image: url(' . plugin_dir_url(__FILE__) . '../Images/' . $image . '.jpg)"></div>
                                  <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
                                     <div class="campListing">';
-
-                // add the camper's name and the week for which we're displaying information
-                $html .= '<p class="weekTitle"><span style="font-weight:normal">';
-                $html .= '</span><br />';
-                $html .= '</p>' . "\n";
 
                 // add the registered banner, if applicable
                 if ($registered || $campfireNight) {

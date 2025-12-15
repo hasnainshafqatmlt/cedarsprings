@@ -60,16 +60,17 @@ if (!empty($_SESSION['registrationPage']) && $_SESSION['registrationPage'] + 360
 // load the classes specific to the portal
 require_once(plugin_dir_path(__FILE__) . 'classes/PortalView.php');
 $view = new PortalView();
-
+$background_image_url = home_url('/wp-content/uploads/2025/07/SUMMER-CAMPS-2.webp');
+$logo_image_url = home_url('/wp-content/uploads/2025/03/Logo.svg');
 ?>
 <!-- Modal -->
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="tw-max-w-[900px] tw-mx-auto tw-mt-[160px]" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">...</h4>
+                <h4 class="modal-title tw-mt-0 tw-mb-2" id="myModalLabel">...</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -77,15 +78,36 @@ $view = new PortalView();
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700
+           hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                    data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="camper-hero-section tw-mb-7 " style="background-image: url('<?php echo esc_url($background_image_url); ?>') ;">
+    <div class="logo">
+        <img src="<?php echo esc_url($logo_image_url); ?>" />
+    </div>
+    <h2>Cedar Springs Summer Registration</h2>
+    <p>Welcome, <span id="contactName"></span></p>
+    <div class="logout-link"><a href="javascript:" onclick="return customLogout()" class="text-white">LOG OUT</a></div>
+    <div>
+        <button type="button" class="btn btn-info !tw-bg-[#5FB34A]">
+            Registration HQ
+        </button>
+    </div>
+    <div>
+        <button type="button" class="btn btn-primary">
+            Add A Camper
+        </button>
+    </div>
+</div>
+
 <div id="fh5co-featured" style="background-image: url(/images/wood_1.png); background-position: 0px 0px; background-ratio:0; padding: 0;">
 
-    <div class="container">
+    <div class="tw-max-w-[600px] tw-mx-auto">
 
         <div class="row">
             <div id="camps-wrapper" class="fh5co-grid">
@@ -97,7 +119,7 @@ $view = new PortalView();
                         <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
                             <span class="pricing">There is space Available!</span>
 
-                            <p class="description no-top-padding">Your patience on the camper queue has paid off and there is now space available. Select which camps you would like to register for.</p>
+                            <p class="description no-top-padding  tw-text-sm">Your patience on the camper queue has paid off and there is now space available. Select which camps you would like to register for.</p>
                             </p>
                             <form id="frmActive" method="post" action="./../submitCamperQueue.php" onSubmit='return validateActiveForm();'>
                                 <div class="activeListingContainer" id="activeElementContainer">
@@ -117,8 +139,8 @@ $view = new PortalView();
                     <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
                         <span class="pricing">Schedule and Queue Status</span>
 
-                        <p class="description no-top-padding">Your family's summer schedule and queue status is listed below. If you would like to make additional registrations, or add your campers to additional queues, <a href="./../">return to the camper queue</a>.</p>
-                        <p class="description">For camps which your campers are in queue, you can cancel their place on the queue, removing them completely; you can snooze them on the queue, skipping any available space for the upcoming week; or you can re-activate expired queues, returning your camper to the top of the list for camps in which an available space was not claimed.</p>
+                        <p class="description no-top-padding  tw-text-sm">Your family's summer schedule and queue status is listed below. If you would like to make additional registrations, or add your campers to additional queues, <a href="./../">return to the camper queue</a>.</p>
+                        <p class="description tw-text-sm">For camps which your campers are in queue, you can cancel their place on the queue, removing them completely; you can snooze them on the queue, skipping any available space for the upcoming week; or you can re-activate expired queues, returning your camper to the top of the list for camps in which an available space was not claimed.</p>
 
                     </div>
                     <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/daycamps/images/kids_hike.jpg)"></div>
@@ -172,7 +194,7 @@ $view = new PortalView();
         </div>
     </div>
 </div>
-</div>
+
 <div id="contact-wrap"></div>
 
 
@@ -181,6 +203,7 @@ $view = new PortalView();
 wp_enqueue_script('bootstrap-min-js', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', array('jquery'), '2.0.0', true);
 wp_enqueue_script('portalConfirmationDialog-js', plugin_dir_url(__FILE__) . 'js/portalConfirmationDialog.js', array('jquery'), '1.0.0', true);
 wp_enqueue_style('bootstrap-modal-css', plugin_dir_url(__FILE__) . 'css/bootstrap-modal.css', array(), '1.0.0');
+wp_enqueue_style('custom-camp-planner-css', plugin_dir_url(__FILE__) . 'css/planner.css', array(), '1.0.0');
 ?>
 
 <script>
