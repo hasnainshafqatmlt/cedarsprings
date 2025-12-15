@@ -122,14 +122,18 @@
   top: -0.25rem
 }
 
+.tw-mx-auto {
+  margin-left: auto;
+  margin-right: auto
+}
+
 .tw-my-0 {
   margin-top: 0px;
   margin-bottom: 0px
 }
 
-.tw-mx-auto {
-  margin-left: auto;
-  margin-right: auto
+.tw-mb-2 {
+  margin-bottom: 0.5rem
 }
 
 .tw-mb-4 {
@@ -140,24 +144,20 @@
   margin-bottom: 1.5rem
 }
 
-.tw-mb-\[22px\] {
-  margin-bottom: 22px
+.tw-mb-7 {
+  margin-bottom: 1.75rem
 }
 
-.tw-mt-\[160px\] {
-  margin-top: 160px
+.tw-mb-\[22px\] {
+  margin-bottom: 22px
 }
 
 .tw-mt-0 {
   margin-top: 0px
 }
 
-.tw-mb-2 {
-  margin-bottom: 0.5rem
-}
-
-.tw-mb-7 {
-  margin-bottom: 1.75rem
+.tw-mt-\[160px\] {
+  margin-top: 160px
 }
 
 .tw-w-full {
@@ -213,6 +213,11 @@
   border-color: rgb(217 217 217 / var(--tw-border-opacity, 1))
 }
 
+.\!tw-bg-\[\#5FB34A\] {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(95 179 74 / var(--tw-bg-opacity, 1)) !important
+}
+
 .tw-bg-\[\#3B89F0\] {
   --tw-bg-opacity: 1;
   background-color: rgb(59 137 240 / var(--tw-bg-opacity, 1))
@@ -230,15 +235,6 @@
 .tw-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))
-}
-
-.\!tw-bg-\[5FB34A\] {
-  background-color: 5FB34A !important
-}
-
-.\!tw-bg-\[\#5FB34A\] {
-  --tw-bg-opacity: 1 !important;
-  background-color: rgb(95 179 74 / var(--tw-bg-opacity, 1)) !important
 }
 
 .tw-px-4 {
@@ -328,6 +324,102 @@
 }
 
 /* Place shared component styles or design tokens below using the tw- prefix */
+
+.tw-btn-primary {
+  border-radius: 4px;
+  border-style: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 137 240 / var(--tw-bg-opacity, 1));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1))
+}
+
+.tw-btn-primary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 137 240 / var(--tw-bg-opacity, 1))
+}
+
+.tw-btn-primary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity, 1));
+  --tw-ring-offset-width: 2px
+}
+
+.tw-btn-secondary {
+  border-radius: 4px;
+  border-style: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 165 20 / var(--tw-bg-opacity, 1));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1))
+}
+
+.tw-btn-secondary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 165 20 / var(--tw-bg-opacity, 1))
+}
+
+.tw-btn-secondary:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(15 165 20 / var(--tw-ring-opacity, 1));
+  --tw-ring-offset-width: 2px
+}
+
+.tw-btn-neutral {
+  border-radius: 4px;
+  border-style: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1))
+}
+
+.tw-btn-neutral:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
+}
+
+.tw-btn-neutral:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(156 163 175 / var(--tw-ring-opacity, 1));
+  --tw-ring-offset-width: 2px
+}
 
 @media (prefers-color-scheme: dark) {
   @media (min-width: 1024px) {

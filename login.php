@@ -179,19 +179,18 @@ class CustomLoginPlugin
             <h2>Usage</h2>
             <p>Use the shortcode <code>[custom_login_form]</code> to display the login form on any page or post.</p>
         </div>
-    <?php
+<?php
     }
 
     public function login_form_shortcode($atts)
     {
-
         if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
             return '<!-- hidden in editor -->';
         }
 
         PluginLogger::clear();
 
-        require_once(__DIR__ . '/tools/SeasonalConfigElements.php');
+        require_once __DIR__ . '/tools/SeasonalConfigElements.php';
 
         $config = new SeasonalConfigElements();
 
@@ -199,6 +198,7 @@ class CustomLoginPlugin
             $testmode = true;
         }
         PluginLogger::log('isRegistrationOpen ::' . print_r($config->isRegistrationOpen(), true));
+
         // Check if registration is open
         if (!$config->isRegistrationOpen() && !isset($testmode)) {
             // Redirect to the summer is coming page
@@ -206,52 +206,16 @@ class CustomLoginPlugin
         }
 
         $help_text = get_option('custom_login_help_text', 'Log in to Your Account');
-        if (
-            !empty($_COOKIE['key']) ||
-            !empty($_COOKIE['account'])
-        ) {
+
+        if (!empty($_COOKIE['key']) || !empty($_COOKIE['account'])) {
             echo '<script>window.location.href = "/camps-summer-queue-registration";</script>';
         }
+
         ob_start();
-    ?>
-        <div id="login-section">
-            <div id="loginBox">
-                <span class="pricing" id="loginInstructions"><?php echo esc_html($help_text); ?></span>
-                <form>
-                    <span class="invalid_credentials" style="display:none;">The email address or password is incorrect.<br /></span>
-                    <span class="server_error" style="display:none;">There was an error processing your request. Please try again.<br /></span>
-                    <div class="login-field-block">
-                        <label>Username/Email:</label>
-                        <input type="text" id="userEmail" name="userEmail" />
-                    </div>
-                    <div class="login-field-block">
-                        <label>Password:</label>
-                        <input type="password" id="userPassword" name="userPassword" />
-                    </div>
-                    <br />
-                    <button class="btn btn-title-action btn-outline no-top-padding" id="loginBtn" onclick="return submitLoginForm()">Log In</button>
-                    <a href="#" class="btn-blue">create account</a>
-                    <input type="submit" style="display:none" />
-                </form>
-                <span>&nbsp;&nbsp;&nbsp;</span>
-                <a href="#" class="credentials" data-toggle="modal" data-target="#myModal" data-msg="resetAccount">Forgot your login?</a>
-            </div>
-        </div>
 
-        <!-- Loading DIV -->
-        <div id="loading-section" style="display:none;">
-            <div id="loadingBox">
-                <span class="pricing" style="padding: 0 !important;">Working . . . </span>
-            </div>
-        </div>
+        // Include the separated template for the login form markup.
+        include plugin_dir_path(__FILE__) . 'login-form-template.php';
 
-        <!-- Success Section -->
-        <div id="loggedin-section" style="display:none;">
-            <div id="contactName"></div>
-            <div id="campGrid"></div>
-            <a href="#" onclick="return customLogout()">log out</a>
-        </div>
-<?php
         return ob_get_clean();
     }
 
