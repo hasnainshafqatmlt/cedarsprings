@@ -18,7 +18,7 @@
             </div>
             <br />
             <button class="btn btn-title-action btn-outline no-top-padding" id="loginBtn" onclick="return submitLoginForm()">Log In</button>
-            <a href="#" class="btn-blue">create account</a>
+            <a href="/camps/create-account/" class="btn-blue">create account</a>
             <input type="submit" style="display:none" />
         </form>
         <span>&nbsp;&nbsp;&nbsp;</span>

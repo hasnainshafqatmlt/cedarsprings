@@ -45,6 +45,8 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_get_camp_capacities', 'get_camp_capacities_callback');
         add_action('wp_ajax_cancel', 'handle_putQueueActions_ajax');
         add_action('wp_ajax_nopriv_cancel', 'handle_putQueueActions_ajax');
+        add_action('wp_ajax_create_account', 'handle_create_account_ajax');
+        add_action('wp_ajax_nopriv_create_account', 'handle_create_account_ajax');
     }
 
     public function init()
@@ -86,10 +88,10 @@ class CustomLoginPlugin
             }
         }
 
+        wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '1.0.0', true);
         if ($should_enqueue_login_script) {
-            wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '1.0.0', true);
             wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
-            wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js?v1', array('jquery'), '1.0.0', true);
+            wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js', array('jquery'), '3.0.0', true);
 
             wp_enqueue_script('custom-login-js', plugin_dir_url(__FILE__) . 'js/login-action.js', array('jquery'), '1.0.0', true);
             wp_localize_script('custom-login-js', 'custom_login_ajax', array(
@@ -365,8 +367,8 @@ function get_camp_capacities_callback()
     include plugin_dir_path(__FILE__) . 'ajax/campCapacities.php';
     wp_die();
 }
-function handle_putQueueActions_ajax()
+function handle_create_account_ajax()
 {
-    include plugin_dir_path(__FILE__) . 'ajax/putQueueActions.php';
+    include plugin_dir_path(__FILE__) . 'ajax/putCreateAccount.php';
     wp_die();
 }

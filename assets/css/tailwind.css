@@ -156,12 +156,16 @@
   margin-top: 0px
 }
 
-.tw-mt-\[160px\] {
-  margin-top: 160px
-}
-
 .tw-mt-3 {
   margin-top: 0.75rem
+}
+
+.tw-mt-4 {
+  margin-top: 1rem
+}
+
+.tw-mt-\[160px\] {
+  margin-top: 160px
 }
 
 .tw-box-border {
@@ -212,6 +216,10 @@
   border-radius: 20px
 }
 
+.tw-rounded-xl {
+  border-radius: 0.75rem
+}
+
 .tw-rounded-tl-\[5px\] {
   border-top-left-radius: 5px
 }
@@ -254,6 +262,11 @@
   padding-right: 1rem
 }
 
+.tw-px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem
+}
+
 .tw-px-8 {
   padding-left: 2rem;
   padding-right: 2rem
@@ -267,6 +280,11 @@
 .tw-py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem
+}
+
+.tw-py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem
 }
 
 .tw-py-6 {
@@ -324,6 +342,11 @@
   font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)
 }
 
+.tw-text-\[\#0073aa\] {
+  --tw-text-opacity: 1;
+  color: rgb(0 115 170 / var(--tw-text-opacity, 1))
+}
+
 .tw-text-\[\#3B89F0\] {
   --tw-text-opacity: 1;
   color: rgb(59 137 240 / var(--tw-text-opacity, 1))
@@ -332,11 +355,6 @@
 .tw-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1))
-}
-
-.tw-text-\[\#0073aa\] {
-  --tw-text-opacity: 1;
-  color: rgb(0 115 170 / var(--tw-text-opacity, 1))
 }
 
 .tw-no-underline {
@@ -388,7 +406,9 @@
 
 .tw-btn-primary:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(59 137 240 / var(--tw-bg-opacity, 1))
+  background-color: rgb(59 137 240 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1))
 }
 
 .tw-btn-primary:focus {

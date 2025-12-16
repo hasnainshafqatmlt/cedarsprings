@@ -119,7 +119,7 @@ class PlayPassManager
         }
 
         if ($camperCount == 0) {
-            $html = '<p class="notice">No eligible campers found for Play Pass (ages 5-10). <a href="addPerson.php">Add a camper</a></p>';
+            $html = '<p class="notice">No eligible campers found for Play Pass (ages 5-10). <a href="/camps/queue/addperson/">Add a camper</a></p>';
         }
 
         return $html;

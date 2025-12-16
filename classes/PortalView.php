@@ -182,7 +182,9 @@ class PortalView
 
         if (empty($this->pendingQueues)) {
             // post a 'no camers here' message
-            $html .= '<div style="text-align:center; width:100%""><p class="description instructions" style="color:white">No one listed on your account falls within the camper age range of 5 to 13 years old. Would you like to add someone to your account?<br /><a class="btn btn-title-action btn-outline no-top-padding" href="../addPerson.php">Add a Person</a></p>';
+            $html .= '<div class="tw-bg-[#FFF8F0] tw-text-center tw-mt-4 tw-px-6 tw-py-4 tw-rounded-xl">';
+            $html .= '<div style="text-align:center; width:100%"" class=" tw-mt-4"><p class="description instructions" style="color:white">No one listed on your account falls within the camper age range of 5 to 13 years old. Would you like to add someone to your account?<br /><a class="tw-btn-primary" href="/camps/queue/addperson/">Add a Person</a></p>';
+            $html .= '</div>';
             PluginLogger::log("debug:: No campers were found on the account.");
             return $html;
         }

@@ -141,9 +141,11 @@ $counter->recordVisit('/camps/queue/createAccount', $_SERVER['REMOTE_ADDR']);
 
         <p id="formValidationMsg"></p>
 
-        <div id='server_error_block'>
-            <span class="server_error">There was an error processing your request. Please try again.<br /></span>
-            <span class="ultracamp_error"></span>
+        <div id='server_error_block' class=" tw-text-base">
+            <div class="server_error">There was an error processing your request. Please try again.<br /></div>
+            <div class="tw-mb-2 tw-inline-block">
+                <div class="ultracamp_error "></div>
+            </div>
         </div>
 
         <button class="tw-btn-secondary tw-font-bold tw-w-full" id="loginBtn" onclick="return submitCreateAccount()">Create Account</button>
@@ -155,12 +157,15 @@ $counter->recordVisit('/camps/queue/createAccount', $_SERVER['REMOTE_ADDR']);
     </div>
 
 </div>
+<script>
+    var adminAjaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+</script>
 
 <?php
 // <!-- Bootstrap DateTimePicker -->
 wp_enqueue_script('bootstrap-min-js', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', array('jquery'), '2.0.0', true);
 wp_enqueue_script('modalDialog-js', plugin_dir_url(__FILE__) . 'js/modalDialog.js', array('jquery'), '1.0.0', true);
-wp_enqueue_script('createAccount-js', plugin_dir_url(__FILE__) . 'js/createAccount.js', array('jquery'), '1.0.0', true);
+wp_enqueue_script('createAccount-js', plugin_dir_url(__FILE__) . 'js/createAccount.js', array('jquery'), '4.0.0', true);
 wp_enqueue_style('bootstrap-modal-css', plugin_dir_url(__FILE__) . 'css/bootstrap-modal.css', array(), '1.0.0');
 wp_enqueue_style('custom-camp-planner-css', plugin_dir_url(__FILE__) . 'css/planner.css', array(), '1.0.0');
 ?>

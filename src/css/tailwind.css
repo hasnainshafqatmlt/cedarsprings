@@ -5,7 +5,7 @@
 /* Place shared component styles or design tokens below using the tw- prefix */
 
 .tw-btn-primary {
-    @apply tw-rounded-[4px] tw-bg-[#3B89F0] tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-white hover:tw-bg-[#3B89F0] focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-none tw-cursor-pointer
+    @apply tw-rounded-[4px] tw-bg-[#3B89F0] tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-white hover:tw-text-white hover:tw-bg-[#3B89F0] focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-none tw-cursor-pointer
 }
 
 .tw-btn-secondary {

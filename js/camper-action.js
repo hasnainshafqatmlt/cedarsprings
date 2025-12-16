@@ -88,7 +88,7 @@ function showCamperSection() {
 
 function showAddCamperButton() {
   $("#camper-section").html(
-    '<div style="width:100%; margin-bottom:25px;"><p class="description instructions">No one listed on your account falls within the camper age range of 5 to 13 years old. Would you like to add someone to your account?</p><a class="btn btn-title-action btn-outline no-top-padding" href="addPerson.php">Add a Person</a>'
+    '<div class="tw-bg-[#FFF8F0] tw-text-center tw-px-6 tw-py-4 tw-rounded-xl tw-mt-4"><div style="width:100%; margin-bottom:25px;"><p class="description instructions tw-text-emerald-[#FFF8F0] tw-px-6 tw-py-4 tw-rounded-xl tw-mt-4">No one listed on your account falls within the camper age range of 5 to 13 years old. Would you like to add someone to your account?</p><a class="tw-btn-primary" href="/camps/queue/addperson/">Add a Person</a></div>'
   );
 
   // for the mobile page
