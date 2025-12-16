@@ -387,11 +387,21 @@
 
    .form-group.new-account {
        display: flex;
+       gap: 10px;
    }
 
-   .form-group.new-account>* {
-       flex: 1;
+   .form-group.new-account {
+       width: 100%;
+   }
+
+   .new-account-label {
+       width: 300px;
        text-align: left;
+       display: flex;
+       padding-top: 13px;
+       font-size: 14px;
+       white-space: nowrap;
+       justify-self: center
    }
 
    .required-field {
@@ -403,6 +413,10 @@
        border-color: #f56f0f !important;
    }
 
+   .new-account .field-error {
+       text-align: left;
+   }
+
    .field-error {
        color: #f56f0f;
        font-size: 0.8em;
@@ -411,8 +425,6 @@
    }
 
    .new-account-label>label {
-       padding-top: 10px;
-       color: white;
        font-weight: normal;
 
    }
@@ -929,4 +941,21 @@
 
    .camper-hero-section button {
        margin-bottom: 20px;
+   }
+
+   .new-account-input {
+       width: 100%;
+   }
+
+   .new-account-input .new-account {
+       width: 100%;
+       padding: 5px 12px;
+       height: 32px;
+       margin: 8px 0;
+       border: none;
+       background-color: rgba(217, 217, 217, 0.5);
+       border-radius: 5px;
+       font-size: 14px;
+       box-sizing: border-box;
+       color: #000;
    }

@@ -5,13 +5,13 @@
 /* Place shared component styles or design tokens below using the tw- prefix */
 
 .tw-btn-primary {
-    @apply tw-rounded-[4px] tw-bg-[#3B89F0] tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-white hover:tw-bg-[#3B89F0] focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-none
+    @apply tw-rounded-[4px] tw-bg-[#3B89F0] tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-white hover:tw-bg-[#3B89F0] focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-500 focus:tw-ring-offset-2 tw-border-none tw-cursor-pointer
 }
 
 .tw-btn-secondary {
-    @apply tw-rounded-[4px] tw-bg-[#0FA514] tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-white hover:tw-bg-[#0FA514] focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-[#0FA514] focus:tw-ring-offset-2 tw-border-none
+    @apply tw-rounded-[4px] tw-bg-[#0FA514] tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-white hover:tw-bg-[#0FA514] focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-[#0FA514] focus:tw-ring-offset-2 tw-border-none tw-cursor-pointer
 }
 
 .tw-btn-neutral {
-    @apply tw-rounded-[4px] tw-bg-gray-100 tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-gray-700 hover:tw-bg-gray-200 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-gray-400 focus:tw-ring-offset-2 tw-border-none
+    @apply tw-rounded-[4px] tw-bg-gray-100 tw-px-4 tw-py-2 tw-text-base tw-font-medium tw-text-gray-700 hover:tw-bg-gray-200 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-gray-400 focus:tw-ring-offset-2 tw-border-none tw-cursor-pointer
 }

@@ -30,6 +30,7 @@ class CustomLoginPlugin
         add_shortcode('custom_login_form', array($this, 'login_form_shortcode'));
         add_shortcode('summer_is_coming', array($this, 'summer_is_coming_shortcode'));
         add_shortcode('status_portal', array($this, 'status_portal_shortcode'));
+        add_shortcode('create_account_shortcode', array($this, 'handle_create_account_shortcode'));
         // Register logout AJAX
         add_action('wp_ajax_custom_logout', array($this, 'handle_logout_ajax'));
         add_action('wp_ajax_nopriv_custom_logout', array($this, 'handle_logout_ajax'));
@@ -74,19 +75,32 @@ class CustomLoginPlugin
             );
         }
 
-        wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '1.0.0', true);
-        wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
-        wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js?v1', array('jquery'), '1.0.0', true);
-        wp_enqueue_script('custom-login-js', plugin_dir_url(__FILE__) . 'js/login-action.js', array('jquery'), '1.0.0', true);
-        wp_localize_script('custom-login-js', 'custom_login_ajax', array(
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('custom_login_nonce')
-        ));
-        wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '1.0.0');
+        // Only enqueue login script if the create_account_shortcode is NOT present on the current page
+        $should_enqueue_login_script = true;
 
-        wp_localize_script('custom-camp-camper-action', 'custom_camp_ajax', array(
-            'ajax_url' => admin_url('admin-ajax.php')
-        ));
+        if (!is_admin()) {
+            global $post;
+
+            if ($post instanceof WP_Post && has_shortcode($post->post_content, 'create_account_shortcode')) {
+                $should_enqueue_login_script = false;
+            }
+        }
+
+        if ($should_enqueue_login_script) {
+            wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js?v1', array('jquery'), '1.0.0', true);
+
+            wp_enqueue_script('custom-login-js', plugin_dir_url(__FILE__) . 'js/login-action.js', array('jquery'), '1.0.0', true);
+            wp_localize_script('custom-login-js', 'custom_login_ajax', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('custom_login_nonce')
+            ));
+            wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '1.0.0');
+            wp_localize_script('custom-camp-camper-action', 'custom_camp_ajax', array(
+                'ajax_url' => admin_url('admin-ajax.php')
+            ));
+        }
     }
 
     public function add_admin_menu()
@@ -310,6 +324,13 @@ class CustomLoginPlugin
         if (is_admin()) return;
         ob_start();
         include plugin_dir_path(__FILE__) . 'status_portal.php';
+        return ob_get_clean();
+    }
+    public function handle_create_account_shortcode($atts)
+    {
+        if (is_admin()) return;
+        ob_start();
+        include plugin_dir_path(__FILE__) . 'create-account.php';
         return ob_get_clean();
     }
 }

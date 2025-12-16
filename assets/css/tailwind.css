@@ -160,6 +160,18 @@
   margin-top: 160px
 }
 
+.tw-mt-3 {
+  margin-top: 0.75rem
+}
+
+.tw-box-border {
+  box-sizing: border-box
+}
+
+.tw-inline-block {
+  display: inline-block
+}
+
 .tw-w-full {
   width: 100%
 }
@@ -247,6 +259,11 @@
   padding-right: 2rem
 }
 
+.tw-px-\[52px\] {
+  padding-left: 52px;
+  padding-right: 52px
+}
+
 .tw-py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem
@@ -255,6 +272,11 @@
 .tw-py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem
+}
+
+.tw-py-\[20px\] {
+  padding-top: 20px;
+  padding-bottom: 20px
 }
 
 .tw-text-left {
@@ -270,6 +292,15 @@
   line-height: 2rem
 }
 
+.tw-text-\[22px\] {
+  font-size: 22px
+}
+
+.tw-text-base {
+  font-size: 1rem;
+  line-height: 1.5rem
+}
+
 .tw-text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem
@@ -277,6 +308,10 @@
 
 .tw-font-bold {
   font-weight: 700
+}
+
+.tw-not-italic {
+  font-style: normal
 }
 
 .tw-ordinal {
@@ -297,6 +332,15 @@
 .tw-text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1))
+}
+
+.tw-text-\[\#0073aa\] {
+  --tw-text-opacity: 1;
+  color: rgb(0 115 170 / var(--tw-text-opacity, 1))
+}
+
+.tw-no-underline {
+  text-decoration-line: none
 }
 
 .tw-ring-inset {
@@ -326,6 +370,7 @@
 /* Place shared component styles or design tokens below using the tw- prefix */
 
 .tw-btn-primary {
+  cursor: pointer;
   border-radius: 4px;
   border-style: none;
   --tw-bg-opacity: 1;
@@ -358,6 +403,7 @@
 }
 
 .tw-btn-secondary {
+  cursor: pointer;
   border-radius: 4px;
   border-style: none;
   --tw-bg-opacity: 1;
@@ -390,6 +436,7 @@
 }
 
 .tw-btn-neutral {
+  cursor: pointer;
   border-radius: 4px;
   border-style: none;
   --tw-bg-opacity: 1;
@@ -419,6 +466,11 @@
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(156 163 175 / var(--tw-ring-opacity, 1));
   --tw-ring-offset-width: 2px
+}
+
+.hover\:tw-text-\[\#0fa514\]:hover {
+  --tw-text-opacity: 1;
+  color: rgb(15 165 20 / var(--tw-text-opacity, 1))
 }
 
 @media (prefers-color-scheme: dark) {
