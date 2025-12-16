@@ -303,16 +303,16 @@ class CustomLoginPlugin
 
     public function summer_is_coming_shortcode($atts)
     {
-        // Start session at the very beginning of the plugin
-        add_action('init', 'start_session_early', 1);
-        // require_once plugin_dir_path(__FILE__) . 'classes/PluginLogger.php';
+        // // Start session at the very beginning of the plugin
+        // add_action('init', 'start_session_early', 1);
+        // // require_once plugin_dir_path(__FILE__) . 'classes/PluginLogger.php';
 
-        function start_session_early()
-        {
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-        }
+        // function start_session_early()
+        // {
+        //     if (session_status() === PHP_SESSION_NONE) {
+        //         session_start();
+        //     }
+        // }
 
 
         if (is_admin()) return;
