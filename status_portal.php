@@ -9,6 +9,7 @@
 
 // $env = EnvironmentLoader::getInstance();
 // $debug = ($env->getLogLevel() === 'DEBUG');
+
 require_once plugin_dir_path(__FILE__) . 'classes/PluginLogger.php';
 require_once(plugin_dir_path(__FILE__) . 'counter/view_counter.php');
 $counter = new ViewCounter();
@@ -52,7 +53,9 @@ if (!empty($_SESSION['registrationPage']) && $_SESSION['registrationPage'] + 360
     }
 
     PluginLogger::log("d_bug:: Running account level import.");
+
     require_once(plugin_dir_path(__FILE__) . 'tools/pages/reservations/camperQueue-AccountImport.php');
+
     unset($_SESSION['registrationPage']);
 }
 
@@ -78,8 +81,7 @@ $logo_image_url = home_url('/wp-content/uploads/2025/03/Logo.svg');
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700
-           hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                <button type="button" class="tw-btn-neutral"
                     data-dismiss="modal">Close</button>
             </div>
         </div>

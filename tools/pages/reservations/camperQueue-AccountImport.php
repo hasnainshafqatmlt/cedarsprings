@@ -98,14 +98,14 @@ if (!empty($ucData)) {
 				PluginLogger::log("d_bug:: Processing reservation " . $reservation->ReservationId . " for camper " . $reservation->FirstName . ' ' . $reservation->LastName);
 				$db->processReservation($reservation);
 			} catch (Exception $e) {
-				$logger->error("Unable to process the reservation. " . $e->getMessage());
+				PluginLogger::log("Unable to process the reservation. " . $e->getMessage());
 				throw new Exception("Unable to process the reservation.", 0, $e);
 			}
 		} else if (in_array($reservation->SessionId, $accelerateSessions)) {
 			try {
 				$Accelerate->processReservation($reservation);
 			} catch (Exception $e) {
-				$logger->error("Unable to process the reservation. " . $e->getMessage());
+				PluginLogger::log("Unable to process the reservation. " . $e->getMessage());
 				throw new Exception("Unable to process the reservation.", 0, $e);
 			}
 		} else {

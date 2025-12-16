@@ -38,56 +38,59 @@ function custom_camp_queue_form_shortcode($atts)
                 </button>
             </div>
         </div>
-
-        <div id="legend">
-            <h1 class="camper-heading">Registration HQ</h1>
-            <div class="camper-head-guide">
-                <h2>Register Susie for Camp</h2>
-                <div class="camper-guide-grid">
-                    <div class="guide-block">
-                        <i class="check-circle available"></i>
-                        <span>Available</span>
-                    </div>
-                    <div class="guide-block">
-                        <i class="check-circle booked"></i>
-                        <span>You’re booked!</span>
-                    </div>
-                    <div class="guide-block">
-                        <i class="check-circle conflict"></i>
-                        <span>Schedule conflict</span>
-                    </div>
-                    <div class="guide-block">
-                        <i class="check-circle waiting-available"></i>
-                        <span>Waitlist Only Available</span>
-                    </div>
-                    <div class="guide-block">
-                        <i class="check-circle waiting-list"></i>
-                        <span>You’re on the waitlist!</span>
+        <div class=" tw-max-w-[1250px] tw-px-4 tw-box-border tw-mx-auto">
+            <div id="legend">
+                <h1 class="camper-heading">Registration HQ</h1>
+                <div class="camper-head-guide">
+                    <h2>Register Susie for Camp</h2>
+                    <div class="camper-guide-grid">
+                        <div class="guide-block">
+                            <i class="check-circle available"></i>
+                            <span>Available</span>
+                        </div>
+                        <div class="guide-block">
+                            <i class="check-circle booked"></i>
+                            <span>You’re booked!</span>
+                        </div>
+                        <div class="guide-block">
+                            <i class="check-circle conflict"></i>
+                            <span>Schedule conflict</span>
+                        </div>
+                        <div class="guide-block">
+                            <i class="check-circle waiting-available"></i>
+                            <span>Waitlist Only Available</span>
+                        </div>
+                        <div class="guide-block">
+                            <i class="check-circle waiting-list"></i>
+                            <span>You’re on the waitlist!</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="fh5co-v-half camp-row" id="camper-section">
-            <form id="camperQueueForm" name="camperQueueForm" method="post" action="<?php echo home_url('/camps/queue/submitcamperqueue/'); ?>" onSubmit="setLoading();">
-                <input type="hidden" id="showSiblingOptions" name="showSiblingOptions" value='false' />
-                <div class="fh5co-v-col-4 fh5co-text fh5co-special-1" id="amper-section">
-                    <div class="table-responsive" id="fullsized-grid">
-                        <table id="campGridTable" class="table grid-table">
-                            <!-- Javascript adds camp rows here with form-builder.js -->
-                        </table>
+
+            <div class="fh5co-v-half camp-row" id="camper-section">
+                <form id="camperQueueForm" name="camperQueueForm" method="post" action="<?php echo home_url('/camps/queue/submitcamperqueue/'); ?>" onSubmit="setLoading();">
+                    <input type="hidden" id="showSiblingOptions" name="showSiblingOptions" value='false' />
+                    <div class="fh5co-v-col-4 fh5co-text fh5co-special-1" id="amper-section">
+                        <div class="table-responsive" id="fullsized-grid">
+                            <table id="campGridTable" class="table grid-table">
+                                <!-- Javascript adds camp rows here with form-builder.js -->
+                            </table>
+                        </div>
                     </div>
+                </form>
+            </div>
+            <div class="fh5co-v-half camp-row" id="loading-section" style="display:none;">
+                <div class="fh5co-v-col-4 fh5co-text fh5co-special-1" id="loadingBox">
+                    <span class="pricing" style="padding: 0 !important;"><img src="/wp-content/uploads/2025/12/loading-animated.svg" id="loading-img" /> Loading</span>
                 </div>
-            </form>
-        </div>
-        <div class="fh5co-v-half camp-row" id="loading-section" style="display:none;">
-            <div class="fh5co-v-col-4 fh5co-text fh5co-special-1" id="loadingBox">
-                <span class="pricing" style="padding: 0 !important;"><img src="/wp-content/uploads/2025/12/loading-animated.svg" id="loading-img" /> Loading</span>
+            </div>
+            <div style="text-align:center; margin:10px 10px 30px 10px; width:100%;" id="bottomSubmit">
+                <button class="btn btn-submit" style="margin:10px" id='formSubmitBtn2'>Submit Your Choices</button>
             </div>
         </div>
-        <div style="text-align:center; margin:10px 10px 30px 10px; width:100%;" id="bottomSubmit">
-            <button class="btn btn-submit" style="margin:10px" id='formSubmitBtn2'>Submit Your Choices</button>
-        </div>
+
     </div>
     <script>
         // get the camp capacities via AJAX

@@ -188,6 +188,18 @@
   max-width: 900px
 }
 
+.tw-max-w-\[1200px\] {
+  max-width: 1200px
+}
+
+.tw-max-w-\[1100px\] {
+  max-width: 1100px
+}
+
+.tw-max-w-\[1250px\] {
+  max-width: 1250px
+}
+
 .tw-border-collapse {
   border-collapse: collapse
 }
