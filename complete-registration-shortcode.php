@@ -191,7 +191,7 @@ function complete_registration_shortcode($atts)
 
                         ?>
                         <div style="width:100%; max-width: 300px; text-align:center; margin: 30px auto 0;">
-                            <a href="/camps/summer/queue/status/" class="btn-green" style="margin-bottom:15px;">Review Camper Status</a>
+                            <a href="/camps/queue/status/" class="btn-green" style="margin-bottom:15px;">Review Camper Status</a>
                         </div>
                     </div>
                 </div>

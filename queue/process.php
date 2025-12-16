@@ -31,7 +31,7 @@ $isDevEnvironment = false;
 require_once(__DIR__ . '/../counter/view_counter.php');
 
 $counter = new ViewCounter();
-$counter->recordVisit('/camps/summer/queue/process.php', $_SERVER['REMOTE_ADDR']);
+$counter->recordVisit('/camps/queue/process.php', $_SERVER['REMOTE_ADDR']);
 
 // get the logger
 // require_once './logger/plannerLogger.php';

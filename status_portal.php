@@ -117,7 +117,7 @@ $logo_image_url = home_url('/wp-content/uploads/2025/03/Logo.svg');
                 <!-- Active Options -->
                 <?php if ($view->activeQueueCount > 0) : ?>
                     <div class="fh5co-v-half camp-row tw-bg-[#FFF8F0] tw-py-6 tw-px-8 tw-rounded-[20px] tw-mb-6" id="activeElementRow">
-                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/summer/images/contact-us-grid.jpg)"></div>
+                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/images/contact-us-grid.jpg)"></div>
                         <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
                             <span class="pricing">There is space Available!</span>
 
@@ -231,7 +231,7 @@ wp_enqueue_style('custom-camp-planner-css', plugin_dir_url(__FILE__) . 'css/plan
         $("#myModal")
             .find(".modal-body")
             .html(
-                '<img src="../../images/loading-animated.svg" id="loading-img" /> Loading</span>'
+                '<div class="tw-text-center"><img src="/wp-content/uploads/2025/12/loading-animated.svg" id="loading-img" /> Loading</span></div>'
             );
 
         const formData = {

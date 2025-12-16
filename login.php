@@ -367,6 +367,11 @@ function get_camp_capacities_callback()
     include plugin_dir_path(__FILE__) . 'ajax/campCapacities.php';
     wp_die();
 }
+function handle_putQueueActions_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/putQueueActions.php';
+    wp_die();
+}
 function handle_create_account_ajax()
 {
     include plugin_dir_path(__FILE__) . 'ajax/putCreateAccount.php';

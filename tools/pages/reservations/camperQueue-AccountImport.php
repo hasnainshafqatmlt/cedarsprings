@@ -30,7 +30,7 @@ if (empty($account) || !is_numeric($account)) {
 	return true;
 }
 
-require_once(__DIR__ . '/../../../api/ultracamp/ultracamp.php');
+require_once(__DIR__ . '/../../../includes/ultracamp.php');
 require_once(__DIR__ . '/classes/SummerModel.php');
 require_once(__DIR__ . '/classes/AccelerateModel.php');
 

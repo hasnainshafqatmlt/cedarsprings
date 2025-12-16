@@ -6,7 +6,7 @@ require_once(__DIR__ . '/tools/SeasonalConfigElements.php');
 $config = new SeasonalConfigElements();
 
 $counter = new ViewCounter();
-$counter->recordVisit('/camps/summer/summer_is_coming.php/', $_SERVER['REMOTE_ADDR']);
+$counter->recordVisit('/camps/summer_is_coming.php/', $_SERVER['REMOTE_ADDR']);
 
 // timezone is set in the counter page for west coast
 // Get the current date

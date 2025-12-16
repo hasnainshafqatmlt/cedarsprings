@@ -7,7 +7,6 @@ function displayCampers() {
   const urlParams = new URLSearchParams(window.location.search);
   const testmode = urlParams.get("duckfeet");
 
-  var host = "https://cedarsprings.camp/camps/summer/queue/";
   hideCampers();
   showLoadingBox();
   // need to send the account number and the account key for user validation
