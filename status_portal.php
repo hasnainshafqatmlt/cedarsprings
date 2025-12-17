@@ -96,14 +96,18 @@ $logo_image_url = home_url('/wp-content/uploads/2025/03/Logo.svg');
     <p>Welcome, <span id="contactName"></span></p>
     <div class="logout-link"><a href="javascript:" onclick="return customLogout()" class="text-white">LOG OUT</a></div>
     <div>
-        <button type="button" class="btn btn-info !tw-bg-[#5FB34A]">
-            Registration HQ
-        </button>
+        <a href="/camps/queue" class=" tw-inline-block">
+            <button type="button" class="btn btn-info !tw-bg-[#5FB34A]">
+                Registration HQ
+            </button>
+        </a>
     </div>
     <div>
-        <button type="button" class="btn btn-primary">
-            Add A Camper
-        </button>
+        <a href="/camps/queue/addperson" class=" tw-inline-block">
+            <button type="button" class="btn btn-primary">
+                Add A Camper
+            </button>
+        </a>
     </div>
 </div>
 

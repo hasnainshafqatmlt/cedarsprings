@@ -176,6 +176,10 @@
   display: inline-block
 }
 
+.tw-flex {
+  display: flex
+}
+
 .tw-w-full {
   width: 100%
 }
@@ -202,6 +206,26 @@
 
 .tw-border-collapse {
   border-collapse: collapse
+}
+
+.tw-cursor-pointer {
+  cursor: pointer
+}
+
+.tw-flex-wrap {
+  flex-wrap: wrap
+}
+
+.tw-items-center {
+  align-items: center
+}
+
+.tw-gap-2 {
+  gap: 0.5rem
+}
+
+.tw-gap-3 {
+  gap: 0.75rem
 }
 
 .tw-space-y-reverse > :not([hidden]) ~ :not([hidden]) {
@@ -267,6 +291,18 @@
 .tw-bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))
+}
+
+.tw-p-8 {
+  padding: 2rem
+}
+
+.tw-p-4 {
+  padding: 1rem
+}
+
+.tw-p-1 {
+  padding: 0.25rem
 }
 
 .tw-px-4 {

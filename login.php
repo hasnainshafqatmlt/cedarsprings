@@ -31,6 +31,7 @@ class CustomLoginPlugin
         add_shortcode('summer_is_coming', array($this, 'summer_is_coming_shortcode'));
         add_shortcode('status_portal', array($this, 'status_portal_shortcode'));
         add_shortcode('create_account_shortcode', array($this, 'handle_create_account_shortcode'));
+        add_shortcode('create_add_person', array($this, 'handle_create_add_person'));
         // Register logout AJAX
         add_action('wp_ajax_custom_logout', array($this, 'handle_logout_ajax'));
         add_action('wp_ajax_nopriv_custom_logout', array($this, 'handle_logout_ajax'));
@@ -47,6 +48,8 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_cancel', 'handle_putQueueActions_ajax');
         add_action('wp_ajax_create_account', 'handle_create_account_ajax');
         add_action('wp_ajax_nopriv_create_account', 'handle_create_account_ajax');
+        add_action('wp_ajax_add_person', 'handle_add_person_ajax');
+        add_action('wp_ajax_nopriv_add_person', 'handle_add_person_ajax');
     }
 
     public function init()
@@ -83,7 +86,7 @@ class CustomLoginPlugin
         if (!is_admin()) {
             global $post;
 
-            if ($post instanceof WP_Post && has_shortcode($post->post_content, 'create_account_shortcode')) {
+            if ($post instanceof WP_Post && (has_shortcode($post->post_content, 'create_account_shortcode') || has_shortcode($post->post_content, 'create_add_person'))) {
                 $should_enqueue_login_script = false;
             }
         }
@@ -335,6 +338,13 @@ class CustomLoginPlugin
         include plugin_dir_path(__FILE__) . 'create-account.php';
         return ob_get_clean();
     }
+    public function handle_create_add_person($atts)
+    {
+        if (is_admin()) return;
+        ob_start();
+        include plugin_dir_path(__FILE__) . 'add-person.php';
+        return ob_get_clean();
+    }
 }
 
 // Initialize the plugin
@@ -355,10 +365,8 @@ add_action('wp', function () {
     }
     if (isset($post) && has_shortcode($post->post_content, 'complete_registration')) {
     }
-    if (isset($post) && has_shortcode($post->post_content, 'summer_is_coming')) {
-        // Enqueue scripts for summer_is_coming shortcode
-        // wp_enqueue_script('custom-moment-js', plugin_dir_url(__FILE__) . 'js/plugin/moment.js', array('jquery'), '1.0.0', true);
-        // wp_enqueue_script('custom-bootstrap-datetimepicker-min-js', plugin_dir_url(__FILE__) . 'js/plugin/bootstrap-datetimepicker.min.js', array('jquery'), '1.0.0', true);
+    if (isset($post) && has_shortcode($post->post_content, 'create_add_person')) {
+        wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '1.0.0');
     }
 });
 
@@ -375,5 +383,10 @@ function handle_putQueueActions_ajax()
 function handle_create_account_ajax()
 {
     include plugin_dir_path(__FILE__) . 'ajax/putCreateAccount.php';
+    wp_die();
+}
+function handle_add_person_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/putAddPerson.php';
     wp_die();
 }

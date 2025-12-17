@@ -9,8 +9,10 @@ function custom_camp_queue_form_shortcode($atts)
 {
     if (is_admin()) return;
 
+    $queryparams = '';
     if (isset($_GET['duckfeet'])) {
         $testmode = true;
+        $queryparams = '?duckfeet=true';
     }
     // Get dynamic logo URL
     $logo_image_url = home_url('/wp-content/uploads/2025/03/Logo.svg');
@@ -33,9 +35,11 @@ function custom_camp_queue_form_shortcode($atts)
                 </button>
             </div>
             <div>
-                <button type="button" class="btn btn-primary">
-                    Add A Camper
-                </button>
+                <a href="/camps/queue/addperson/<?= $queryparams ?>" class=" tw-inline-block tw-cursor-pointer">
+                    <button type="button" class="btn btn-primary">
+                        Add A Camper
+                    </button>
+                </a>
             </div>
         </div>
         <div class=" tw-max-w-[1250px] tw-px-4 tw-box-border tw-mx-auto">
@@ -125,6 +129,23 @@ function custom_camp_queue_form_shortcode($atts)
             jQuery("#formSubmitBtn2").click(function() {
                 jQuery('#camperQueueForm').submit();
             });
+            let ultraloginUrl = ''
+            <?php
+            if (!empty($_COOKIE['uc-token'])) :
+            ?>
+                ultraloginUrl = "https://www.ultracamp.com/sso/login.aspx?idCamp=107&tkn=<?= $_COOKIE['uc-token']; ?>"
+            <?php
+            else:
+            ?>
+                ultraloginUrl = "https://www.ultracamp.com/clientlogin.aspx?idCamp=107&campCode=CP7"
+            <?php
+            endif;
+            ?>
+
+            const link = document.getElementById('ultracamp-login');
+            if (link) {
+                link.href = ultraloginUrl
+            }
         });
 
         // toggle the legend on and off
