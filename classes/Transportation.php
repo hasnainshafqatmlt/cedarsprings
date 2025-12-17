@@ -23,10 +23,8 @@ class Transportation
         require_once plugin_dir_path(__FILE__) . '../classes/config.php';
 
         require_once plugin_dir_path(__FILE__) . '../db/db-reservations.php';
-
         $this->db = new reservationsDb();
         $this->config = new CQConfig;
-
         $this->db->setLogger($this->logger);
     }
 

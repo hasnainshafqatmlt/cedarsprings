@@ -390,6 +390,12 @@
        gap: 10px;
    }
 
+   @media only screen and (max-width: 450px) {
+       .form-group.new-account {
+           flex-wrap: wrap;
+       }
+   }
+
    .form-group.new-account {
        width: 100%;
    }
@@ -958,4 +964,8 @@
        font-size: 14px;
        box-sizing: border-box;
        color: #000;
+   }
+
+   .control-label.detail-info {
+       font-weight: bold;
    }

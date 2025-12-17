@@ -168,6 +168,10 @@
   margin-top: 160px
 }
 
+.tw-mr-5 {
+  margin-right: 1.25rem
+}
+
 .tw-box-border {
   box-sizing: border-box
 }
@@ -212,6 +216,10 @@
   cursor: pointer
 }
 
+.tw-flex-col {
+  flex-direction: column
+}
+
 .tw-flex-wrap {
   flex-wrap: wrap
 }
@@ -226,6 +234,10 @@
 
 .tw-gap-3 {
   gap: 0.75rem
+}
+
+.tw-gap-5 {
+  gap: 1.25rem
 }
 
 .tw-space-y-reverse > :not([hidden]) ~ :not([hidden]) {
@@ -343,6 +355,41 @@
 .tw-py-\[20px\] {
   padding-top: 20px;
   padding-bottom: 20px
+}
+
+.tw-px-\[0px\] {
+  padding-left: 0px;
+  padding-right: 0px
+}
+
+.tw-px-\[45px\] {
+  padding-left: 45px;
+  padding-right: 45px
+}
+
+.tw-px-\[44px\] {
+  padding-left: 44px;
+  padding-right: 44px
+}
+
+.tw-pb-\[12px\] {
+  padding-bottom: 12px
+}
+
+.tw-pl-\[100px\] {
+  padding-left: 100px
+}
+
+.tw-pr-\[66px\] {
+  padding-right: 66px
+}
+
+.tw-pt-\[22px\] {
+  padding-top: 22px
+}
+
+.tw-pt-\[0px\] {
+  padding-top: 0px
 }
 
 .tw-text-left {
@@ -539,6 +586,21 @@
 .hover\:tw-text-\[\#0fa514\]:hover {
   --tw-text-opacity: 1;
   color: rgb(15 165 20 / var(--tw-text-opacity, 1))
+}
+
+@media (min-width: 768px) {
+  .md\:tw-flex-row {
+    flex-direction: row
+  }
+
+  .md\:tw-px-\[66px\] {
+    padding-left: 66px;
+    padding-right: 66px
+  }
+
+  .md\:tw-pt-\[22px\] {
+    padding-top: 22px
+  }
 }
 
 @media (prefers-color-scheme: dark) {

@@ -219,7 +219,7 @@ function submit_camper_queue_shortcode($atts)
         <div class="registration-wrapper-container">
             <div class="registration-block">
                 <form method="post" action='<?php echo home_url('/camps/queue/complete_registration/'); ?>' onsubmit="return submitCamperQueueForm()">
-                    <div class="registration-cell">
+                    <div class="registration-cell tw-pt-[22px] tw-pb-[12px] md:tw-px-[66px] tw-px-[44px]">
                         <h2 class="heading">Camper Details</h2>
                     </div>
 
@@ -269,13 +269,13 @@ function submit_camper_queue_shortcode($atts)
                                     if ($displayActiveQueue || $displayRegistration) {
                                     ?>
                                         <!-- Transportation section -->
-                                        <div class="registration-cell">
+                                        <div class="registration-cell tw-pt-[22px] tw-pb-[12px] md:tw-px-[66px] tw-px-[0px]">
                                             <div class="fh5co-v-half camp-row">
                                                 <div class="fh5co-v-col-2 fh5co-text fh5co-special-1 ">
                                                     <div class="form-group has-feedback">
-                                                        <div class="fh5co-flex">
-                                                            <label class="control-label detail-info" for="transportation">Transportation Option</label>
-                                                            <select class="form-control detail-info" id="transportation" name="transportation" required>
+                                                        <div class=" tw-flex tw-gap-5 tw-flex-col md:tw-flex-row">
+                                                            <label class=" tw-font-bold" for="transportation">Transportation Option</label>
+                                                            <select class=" tw-w-full" id="transportation" name="transportation" required>
                                                                 <option value="">Make a Selection</option>
 
                                                                 <optgroup label="Direct Drop Off &amp; Pick Up" class="shuttle">
@@ -298,6 +298,7 @@ function submit_camper_queue_shortcode($atts)
 
                                                         <div id="additionalBusesSection" style="display:none">
                                                             <p class="description">The transportation option chosen is not available for each week in your reservation. Please choose an alternate for when your primary choice is not available.</p>
+                                                            <div id="additionalBusesSectionFormFields" class=" tw-flex tw-gap-5 tw-flex-col md:tw-flex-row"></div>
                                                         </div>
 
                                                         <p class="description" id="transportationDescription">Select a drop off and pick up location and we will take care of the rest.<br /> Bus transportation is $<?php echo isset($transportation) ? $transportation->config->transportationCost : '0'; ?> per camper per week. For details on each of the bus locations, <a href="/locations" target=_BLANK>click here</a>.</p>
@@ -307,7 +308,7 @@ function submit_camper_queue_shortcode($atts)
                                         </div>
 
                                         <!-- Lunch Section -->
-                                        <div class="registration-cell">
+                                        <div class="registration-cell tw-pt-[22px] tw-pb-[12px] md:tw-px-[66px] tw-px-[0px]">
                                             <div class="fh5co-v-half camp-row">
                                                 <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
                                                     <div class="fh5co-flex">
@@ -353,7 +354,7 @@ function submit_camper_queue_shortcode($atts)
                                     if ($displayAccelerate) {
                                     ?>
                                         <!-- ACCELERATE SECTION -->
-                                        <div class="registration-cell">
+                                        <div class="registration-cell tw-pt-[22px] tw-pb-[12px] md:tw-px-[66px] tw-px-[0px]">
                                             <div class="fh5co-v-half camp-row">
 
                                                 <div class="fh5co-v-col-2 fh5co-text fh5co-special-1 ">
@@ -388,7 +389,7 @@ function submit_camper_queue_shortcode($atts)
                                         // End Accelerate Sections
                                     }
                                     ?>
-                                    <div class="registration-cell">
+                                    <div class="registration-cell tw-pt-[22px] tw-pb-[12px] md:tw-px-[66px] tw-px-[0px]">
                                         <div class="fh5co-v-half camp-row">
 
                                             <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
@@ -443,7 +444,7 @@ function submit_camper_queue_shortcode($atts)
                                         </div>
                                     </div>
                                     <!-- The submit button section -->
-                                    <div class="registration-cell ">
+                                    <div class="registration-cell tw-pt-[22px] tw-pb-[12px] md:tw-px-[66px] tw-px-[0px] ">
                                         <div class="fh5co-v-half camp-row">
                                             <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
 
@@ -494,6 +495,7 @@ function submit_camper_queue_shortcode($atts)
                     }
                     ?>
                 ];
+                var adminAjaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
             </script>
         <?php } ?>
 

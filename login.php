@@ -50,6 +50,8 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_create_account', 'handle_create_account_ajax');
         add_action('wp_ajax_add_person', 'handle_add_person_ajax');
         add_action('wp_ajax_nopriv_add_person', 'handle_add_person_ajax');
+        add_action('wp_ajax_getAdditionalTransportationOptions', 'handle_getAdditionalTransportationOptions_ajax');
+        add_action('wp_ajax_nopriv_getAdditionalTransportationOptions', 'handle_getAdditionalTransportationOptions_ajax');
     }
 
     public function init()
@@ -74,7 +76,7 @@ class CustomLoginPlugin
         if (file_exists($tailwind_path)) {
             wp_enqueue_style(
                 'cscamp-tailwind',
-                plugin_dir_url(__FILE__) . 'assets/css/tailwind.css',
+                plugin_dir_url(__FILE__) . 'assets/css/tailwind.css?v1',
                 array(),
                 filemtime($tailwind_path)
             );
@@ -101,7 +103,7 @@ class CustomLoginPlugin
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('custom_login_nonce')
             ));
-            wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '1.0.0');
+            wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '3.0.0');
             wp_localize_script('custom-camp-camper-action', 'custom_camp_ajax', array(
                 'ajax_url' => admin_url('admin-ajax.php')
             ));
@@ -359,14 +361,14 @@ add_action('wp', function () {
     }
     if (isset($post) && has_shortcode($post->post_content, 'submit_camper_queue')) {
         // Functionality for the transportation segment 
-        wp_enqueue_script('custom-transportationManagement', plugin_dir_url(__FILE__) . 'js/transportationManagement.js', array('jquery'), '1.0.0', true);
+        wp_enqueue_script('custom-transportationManagement', plugin_dir_url(__FILE__) . 'js/transportationManagement.js', array('jquery'), '3.0.0', true);
         // Functionality for the lunch segment
         wp_enqueue_script('custom-lunchSelections', plugin_dir_url(__FILE__) . 'js/lunchSelections.js', array('jquery'), '1.0.0', true);
     }
     if (isset($post) && has_shortcode($post->post_content, 'complete_registration')) {
     }
     if (isset($post) && has_shortcode($post->post_content, 'create_add_person')) {
-        wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '1.0.0');
+        wp_enqueue_style('custom-login-css', plugin_dir_url(__FILE__) . 'css/style.css', array(), '3.0.0');
     }
 });
 
@@ -388,5 +390,10 @@ function handle_create_account_ajax()
 function handle_add_person_ajax()
 {
     include plugin_dir_path(__FILE__) . 'ajax/putAddPerson.php';
+    wp_die();
+}
+function handle_getAdditionalTransportationOptions_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/getAdditionalTransportationOptions.php';
     wp_die();
 }

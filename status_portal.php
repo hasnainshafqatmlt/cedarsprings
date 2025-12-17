@@ -111,7 +111,7 @@ $logo_image_url = home_url('/wp-content/uploads/2025/03/Logo.svg');
     </div>
 </div>
 
-<div id="fh5co-featured" style="background-image: url(/images/wood_1.png); background-position: 0px 0px; background-ratio:0; padding: 0;">
+<div id="fh5co-featured" class=" tw-px-4">
 
     <div class="tw-max-w-[600px] tw-mx-auto">
 

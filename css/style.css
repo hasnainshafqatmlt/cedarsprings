@@ -222,8 +222,6 @@
 
 .registration-cell {
     border-bottom: 4px solid #fff;
-    padding-bottom: 15px;
-    padding: 22px 100px 12px 66px;
 }
 
 .registration-cell:last-child {
@@ -242,15 +240,6 @@
     display: flex;
     align-items: center;
     margin-bottom: 8px;
-}
-
-.fh5co-flex select {
-    margin-bottom: 0;
-}
-
-.fh5co-flex .control-label {
-    margin-right: 20px;
-    font-weight: bold;
 }
 
 .fh5co-text p a {
