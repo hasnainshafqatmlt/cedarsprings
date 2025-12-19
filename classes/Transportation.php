@@ -45,7 +45,7 @@ class Transportation
         try {
             $trans = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            $this->logger->error("Unable to load the transportation options from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to load the transportation options from the database: " . $e->getMessage());
             return false;
         }
 
@@ -59,7 +59,7 @@ class Transportation
 
         // itterate through the options, get their capacity values, dump those not in the weeks array and other stuff
         foreach ($trans as $t) {
-            $this->logger->d_bug("Checking " . $t['name'] . " for a capacity of $minCapacity");
+            PluginLogger::log("Checking " . $t['name'] . " for a capacity of $minCapacity");
             $cap = false;
             foreach ($weeks as $w) {
                 if ($this->getCapacity($t['templateid'], $w) >= $minCapacity) {
@@ -102,7 +102,7 @@ class Transportation
         try {
             $trans = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            $this->logger->error("Unable to load the transportation options from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to load the transportation options from the database: " . $e->getMessage());
             return false;
         }
 
@@ -111,7 +111,7 @@ class Transportation
 
         // itterate through the options, get their capacity values, dump those not in the weeks array and other stuff
         foreach ($trans as $t) {
-            $this->logger->d_bug("Checking " . $t['name'] . " for a capacity of $minCapacity");
+            PluginLogger::log("Checking " . $t['name'] . " for a capacity of $minCapacity");
             $cap = false;
             foreach ($weeks as $w) {
                 if ($this->getCapacity($t['templateid'], $w) >= $minCapacity) {
@@ -238,7 +238,7 @@ class Transportation
             try {
                 $result = $this->db->runQuery($sql, 'i', [$bus['templateid']]);
             } catch (Exception $e) {
-                $this->logger->error("Unable to get the bus cost from the database for day camp: " . $e->getMessage());
+                PluginLogger::log("Unable to get the bus cost from the database for day camp: " . $e->getMessage());
             }
 
             if (isset($result) && $result[0]['cost'] > 0) {
@@ -289,7 +289,7 @@ class Transportation
                 }
             }
         } catch (Exception $e) {
-            $this->logger->error("Unable to get the extended care cost from the database for day camp: " . $e->getMessage());
+            PluginLogger::log("Unable to get the extended care cost from the database for day camp: " . $e->getMessage());
         }
 
         $js = "122575 : \"Drop off and pick up directly from camp in Lake Stevens.<br /><br />Morning check in: <b>8:30 - 8:45 AM</b><br />Afternoon check out: <b>4:00 - 4:15 PM</b>\",\n";
@@ -316,11 +316,11 @@ class Transportation
     {
         // make sure that we don't have odd values coming in
         if (!is_numeric($week)) {
-            $this->logger->error("The week number provided ($week)for getCapacity is not numeric.");
+            PluginLogger::log("The week number provided ($week)for getCapacity is not numeric.");
             return false;
         }
         if (!is_numeric($option)) {
-            $this->logger->error("The option templateid provided ($option) for getCapacity is not numeric.");
+            PluginLogger::log("The option templateid provided ($option) for getCapacity is not numeric.");
             return false;
         }
 
@@ -331,7 +331,7 @@ class Transportation
         try {
             $z = $this->db->runQuery($sql, 'i', $option);
         } catch (Exception $e) {
-            $this->logger->error("Unable to retrived the capacity for $option on week $week: " . $e->getMessage());
+            PluginLogger::log("Unable to retrived the capacity for $option on week $week: " . $e->getMessage());
             return false;
         }
 
@@ -339,7 +339,7 @@ class Transportation
         $reg = is_numeric($z[0]['reg' . $week]) ? $z[0]['reg' . $week] : 0;
         $cap = is_numeric($z[0]['cap' . $week]) ? $z[0]['cap' . $week] : 0;
 
-        //        $this->logger->d_bug("Capacity for $option is: ". $cap - $reg);
+        //        PluginLogger::log("Capacity for $option is: ". $cap - $reg);
 
         return $cap - $reg;
     }
@@ -356,7 +356,7 @@ class Transportation
         try {
             $w = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            $this->logger->error("Unable to collect the summer weeks from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to collect the summer weeks from the database: " . $e->getMessage());
             return false;
         }
 
@@ -364,7 +364,7 @@ class Transportation
             $y[] = $x['week_num'];
         }
 
-        $this->logger->d_bug("Getting summer weeks from the database", $y);
+        PluginLogger::log("Getting summer weeks from the database", $y);
         return $y;
     }
 
@@ -377,7 +377,7 @@ class Transportation
 
     function accelSundayOption($weeks, $count)
     {
-        $this->logger->d_bug('Accel Sunday Options', array($weeks, $count));
+        PluginLogger::log('Accel Sunday Options', array($weeks, $count));
         $sundayBus = 83718;
         $busCapacity = true;
 
@@ -394,7 +394,7 @@ class Transportation
         try {
             $result = $this->db->runQuery($sql, 'i', [$sundayBus]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to get the Friday accelerate cost from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to get the Friday accelerate cost from the database: " . $e->getMessage());
         }
 
         if (isset($result) && $result[0]['cost'] > 0) {
@@ -431,7 +431,7 @@ class Transportation
 
     function accelFridayOption($weeks, $count)
     {
-        $this->logger->d_bug('Accel Friday Options', array($weeks, $count));
+        PluginLogger::log('Accel Friday Options', array($weeks, $count));
         $fridayBus = 83719;
         $busCapacity = true;
 
@@ -448,7 +448,7 @@ class Transportation
         try {
             $result = $this->db->runQuery($sql, 'i', [$fridayBus]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to get the Friday accelerate cost from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to get the Friday accelerate cost from the database: " . $e->getMessage());
         }
 
         if (isset($result) && $result[0]['cost'] > 0) {

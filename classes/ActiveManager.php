@@ -52,9 +52,9 @@ class ActiveManager
         }
 
         if ($this->production) {
-            $this->logger->d_bug("Operating in production!");
+            PluginLogger::log("Operating in production!");
         } else {
-            $this->logger->d_bug("Operating in Dev Mode");
+            PluginLogger::log("Operating in Dev Mode");
         }
     }
 
@@ -76,7 +76,7 @@ class ActiveManager
     // Takes an entry ID, and returns the camp name and overnight choice of any reservations for the camper during the same week
     function checkIfChangeOrder($entry)
     {
-        $this->logger->d_bug("Checking entry for change order", $entry);
+        PluginLogger::log("Checking entry for change order", $entry);
         if (is_array($entry)) {
             $e = $entry;
         } else {
@@ -98,14 +98,14 @@ class ActiveManager
         try {
             $result = $this->db->runQuery($sql, 'ii', [$e[1], $e[3]]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to verify existing reservation: " . $e->getMessage());
+            PluginLogger::log("Unable to verify existing reservation: " . $e->getMessage());
             return false;
         }
 
         if (!empty($result)) {
             $this->currentEntry = $e;
             $this->matchingReservation = $result[0];
-            $this->logger->debug("Returning as a change order due to matching reseveration for the week", $result);
+            PluginLogger::log("Returning as a change order due to matching reseveration for the week", $result);
 
             $change['changeOrder'] = true;
             $change['campName'] = $result[0]['camp_name'];
@@ -120,7 +120,7 @@ class ActiveManager
     // Used by process.php to check if a change order is due to the inclusion of an add on, rather than a camp change
     function checkForAddOn($entry)
     {
-        $this->logger->d_bug("Checking changeorder for addon", $entry);
+        PluginLogger::log("Checking changeorder for addon", $entry);
         if (is_array($entry)) {
             $e = $entry;
         } else {
@@ -142,7 +142,7 @@ class ActiveManager
         try {
             $result = $this->db->runQuery($sql, 'ii', [$e[1], $e[3]]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to verify existing reservation: " . $e->getMessage());
+            PluginLogger::log("Unable to verify existing reservation: " . $e->getMessage());
             return false;
         }
 
@@ -173,7 +173,7 @@ class ActiveManager
             return false;
         }
 
-        $this->logger->d_bug("Running notifyOfficeOfChange()", $entry);
+        PluginLogger::log("Running notifyOfficeOfChange()", $entry);
 
         // we need the corosponding reservation - check the cache for it
         if ($e == $this->currentEntry) {
@@ -184,16 +184,16 @@ class ActiveManager
             try {
                 $result = $this->db->runQuery($sql, 'ii', array($e[1], $e[3]));
             } catch (Exception $e) {
-                $this->logger->error("Unable to verify an existing reservation in convertActiveToChange(): " . $e->getMessage());
+                PluginLogger::log("Unable to verify an existing reservation in convertActiveToChange(): " . $e->getMessage());
                 return false;
             }
 
-            $this->logger->debug("Find matching reservation", $result);
+            PluginLogger::log("Find matching reservation", $result);
 
             if (!empty($result)) {
                 $reservation = $result[0];
             } else {
-                $this->logger->error("There was not a mathching reservation for a changelog in the database", $entry);
+                PluginLogger::log("There was not a mathching reservation for a changelog in the database", $entry);
                 return false;
             }
         }
@@ -205,17 +205,17 @@ class ActiveManager
             try {
                 $res = $this->db->runQuery($sql, 's', $reservation['camp_name']);
             } catch (Exception $e) {
-                $this->logger->error("Unable to get a template ID from camp options for " . $reservation['camp_name'] . ': ' . $e->getMessage());
+                PluginLogger::log("Unable to get a template ID from camp options for " . $reservation['camp_name'] . ': ' . $e->getMessage());
                 return false;
             }
 
             if (!empty($res)) {
                 if ($res[0]['templateid'] == $e[2]) {
-                    $this->logger->warning("We're trying to process a change order for the same camp" . $entry);
+                    PluginLogger::log("We're trying to process a change order for the same camp" . $entry);
                     return true;
                 }
             } else {
-                $this->logger->warning($reservation['camp_name'] . " did not return with a template ID in notifyOfficeOfChange()" . $entry);
+                PluginLogger::log($reservation['camp_name'] . " did not return with a template ID in notifyOfficeOfChange()" . $entry);
             }
         }
 
@@ -257,21 +257,21 @@ class ActiveManager
                 try {
                     $this->processWaitlistEntry($e);
                 } catch (Exception $error) {
-                    $this->logger->error("Unable to udpate the database with the new camp status", $error->getMessage());
+                    PluginLogger::log("Unable to udpate the database with the new camp status", $error->getMessage());
                     return false;
                 }
             } elseif ($addingCamp) {
                 try {
                     $this->processAddedCamp($e);
                 } catch (Exception $error) {
-                    $this->logger->error("Unable to add the camp to the database", $error->getMessage());
+                    PluginLogger::log("Unable to add the camp to the database", $error->getMessage());
                     return false;
                 }
             } elseif ($addingCampfire) {
                 try {
                     $this->processAddedCampfire($e);
                 } catch (Exception $error) {
-                    $this->logger->error("Unable to add the campfire night to the database", $error->getMessage());
+                    PluginLogger::log("Unable to add the campfire night to the database", $error->getMessage());
                     return false;
                 }
             }
@@ -295,7 +295,7 @@ class ActiveManager
         try {
             $this->db->insert($sql, 'iiii', [$camper, $camper, $camp, $week]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to insert the newly added camp to the waitlist: " . $e->getMessage());
+            PluginLogger::log("Unable to insert the newly added camp to the waitlist: " . $e->getMessage());
             return false;
         }
 
@@ -321,12 +321,12 @@ class ActiveManager
         try {
             $update = $this->db->update($sql, 'iii', array($e[1], $e[3], $e[2]));
         } catch (Exception $e) {
-            $this->logger->error("Unable to mark a change order as processed due to a SQL error: " . $e->getMessage());
-            //  $this->logger->d_bug($sql, array($e[1], $e[3], $e[2]));
+            PluginLogger::log("Unable to mark a change order as processed due to a SQL error: " . $e->getMessage());
+            //  PluginLogger::log($sql, array($e[1], $e[3], $e[2]));
             return false;
         }
 
-        $this->logger->d_bug("Affected Rows: ", $update);
+        PluginLogger::log("Affected Rows: ", $update);
         return $update;
     }
 

@@ -32,6 +32,7 @@ class CustomLoginPlugin
         add_shortcode('status_portal', array($this, 'status_portal_shortcode'));
         add_shortcode('create_account_shortcode', array($this, 'handle_create_account_shortcode'));
         add_shortcode('create_add_person', array($this, 'handle_create_add_person'));
+        add_shortcode('create_playpass', array($this, 'handle_create_playpass'));
         // Register logout AJAX
         add_action('wp_ajax_custom_logout', array($this, 'handle_logout_ajax'));
         add_action('wp_ajax_nopriv_custom_logout', array($this, 'handle_logout_ajax'));
@@ -52,6 +53,14 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_add_person', 'handle_add_person_ajax');
         add_action('wp_ajax_getAdditionalTransportationOptions', 'handle_getAdditionalTransportationOptions_ajax');
         add_action('wp_ajax_nopriv_getAdditionalTransportationOptions', 'handle_getAdditionalTransportationOptions_ajax');
+        add_action('wp_ajax_getExistingSelections', 'handle_getExistingSelections_ajax');
+        add_action('wp_ajax_nopriv_getExistingSelections', 'handle_getExistingSelections_ajax');
+        add_action('wp_ajax_getRegisteredWeeks', 'handle_getRegisteredWeeks_ajax');
+        add_action('wp_ajax_nopriv_getRegisteredWeeks', 'handle_getRegisteredWeeks_ajax');
+        add_action('wp_ajax_getPlayPassPricing', 'handle_getPlayPassPricing_ajax');
+        add_action('wp_ajax_nopriv_getPlayPassPricing', 'handle_getPlayPassPricing_ajax');
+        add_action('wp_ajax_getPlayPassDays', 'handle_getPlayPassDays_ajax');
+        add_action('wp_ajax_nopriv_getPlayPassDays', 'handle_getPlayPassDays_ajax');
     }
 
     public function init()
@@ -88,12 +97,15 @@ class CustomLoginPlugin
         if (!is_admin()) {
             global $post;
 
-            if ($post instanceof WP_Post && (has_shortcode($post->post_content, 'create_account_shortcode') || has_shortcode($post->post_content, 'create_add_person'))) {
+            if ($post instanceof WP_Post && (has_shortcode($post->post_content, 'create_account_shortcode') ||
+                has_shortcode($post->post_content, 'create_add_person') ||
+                has_shortcode($post->post_content, 'create_playpass')
+            )) {
                 $should_enqueue_login_script = false;
             }
         }
 
-        wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '1.0.0', true);
+        wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '2.0.0', true);
         if ($should_enqueue_login_script) {
             wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
             wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js', array('jquery'), '3.0.0', true);
@@ -320,7 +332,9 @@ class CustomLoginPlugin
         // }
 
 
-        if (is_admin()) return;
+        if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return '<!-- hidden in editor -->';
+        }
 
         ob_start();
         include plugin_dir_path(__FILE__) . 'summer_is_coming.php';
@@ -328,23 +342,38 @@ class CustomLoginPlugin
     }
     public function status_portal_shortcode($atts)
     {
-        if (is_admin()) return;
+        if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return '<!-- hidden in editor -->';
+        }
         ob_start();
         include plugin_dir_path(__FILE__) . 'status_portal.php';
         return ob_get_clean();
     }
     public function handle_create_account_shortcode($atts)
     {
-        if (is_admin()) return;
+        if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return '<!-- hidden in editor -->';
+        }
         ob_start();
         include plugin_dir_path(__FILE__) . 'create-account.php';
         return ob_get_clean();
     }
     public function handle_create_add_person($atts)
     {
-        if (is_admin()) return;
+        if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return '<!-- hidden in editor -->';
+        }
         ob_start();
         include plugin_dir_path(__FILE__) . 'add-person.php';
+        return ob_get_clean();
+    }
+    public function handle_create_playpass($atts)
+    {
+        if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return '<!-- hidden in editor -->';
+        }
+        ob_start();
+        include plugin_dir_path(__FILE__) . 'playpass.php';
         return ob_get_clean();
     }
 }
@@ -395,5 +424,25 @@ function handle_add_person_ajax()
 function handle_getAdditionalTransportationOptions_ajax()
 {
     include plugin_dir_path(__FILE__) . 'ajax/getAdditionalTransportationOptions.php';
+    wp_die();
+}
+function handle_getExistingSelections_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/getExistingSelections.php';
+    wp_die();
+}
+function handle_getRegisteredWeeks_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/getRegisteredWeeks.php';
+    wp_die();
+}
+function handle_getPlayPassPricing_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/getPlayPassPricing.php';
+    wp_die();
+}
+function handle_getPlayPassDays_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/getPlayPassDays.php';
     wp_die();
 }

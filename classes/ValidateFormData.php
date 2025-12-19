@@ -38,25 +38,25 @@ class ValidateFormData
         // the first character must be A, Q, C, P or R
         // A - Active Registration, Q - Queue Request, R - Register, C - Change, P - Playpass
         if ($value[0] != "A" && $value[0] != "Q" && $value[0] != "R" && $value[0] != "C" && $value[0] != "P") {
-            $this->logger->d_bug("Failed input validation for $string due to an invalid first character.");
+            PluginLogger::log("Failed input validation for $string due to an invalid first character.");
             return false;
         }
 
         // the second value is the camper and the third is the camp
         if (!is_numeric($value[1]) || !is_numeric($value[2])) {
-            $this->logger->d_bug("Failed input validation for $string due to an invalid camper or camp id.", $value);
+            PluginLogger::log("Failed input validation for $string due to an invalid camper or camp id.", $value);
             return false;
         }
 
         // the fourth value is the week - it needs to be values of 1 through 12
         if (!is_numeric($value[3]) || (int)$value[2] < 1 || (int)$value[3] > 12) {
-            $this->logger->d_bug("Failed input validation for $string due to an invalid week number.");
+            PluginLogger::log("Failed input validation for $string due to an invalid week number.");
             return false;
         }
 
         // finally, the 5th value can include an option "M" for mobile rows (future functionality maybe)
         if (!empty($value[4]) && $value[4] != "M") {
-            $this->logger->d_bug("Failed input validation for $string due to an invalid fifth value (M).");
+            PluginLogger::log("Failed input validation for $string due to an invalid fifth value (M).");
             return false;
         }
 

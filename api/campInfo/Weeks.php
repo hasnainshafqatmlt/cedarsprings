@@ -44,7 +44,7 @@ class Weeks
         try {
             $r = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            $this->logger->error("Unable to list the weeks from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to list the weeks from the database: " . $e->getMessage());
             return false;
         }
 
@@ -136,8 +136,8 @@ class Weeks
         try {
             $result = $this->db->runQuery($sql, 'ss', array($currentDate, $currentDate));
         } catch (Exception $e) {
-            $this->logger->error("Unable to select the week number from the summer_weeks database");
-            $this->logger->error($e->getMessage());
+            PluginLogger::log("Unable to select the week number from the summer_weeks database");
+            PluginLogger::log($e->getMessage());
 
             // return zero in the event of an error
             return 0;

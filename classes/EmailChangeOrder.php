@@ -49,15 +49,15 @@ class EmailChangeOrder
         }
 
         if ($this->production) {
-            $this->logger->d_bug("Operating in production!");
+            PluginLogger::log("Operating in production!");
         } else {
-            $this->logger->d_bug("Operating in Dev Mode");
+            PluginLogger::log("Operating in Dev Mode");
         }
     }
 
     function createChangeOrder($entry, $reservation, $pod, $additionalElements = [])
     {
-        $this->logger->d_bug("Starting Change Order", compact('entry', 'reservation', 'pod'));
+        PluginLogger::log("Starting Change Order", compact('entry', 'reservation', 'pod'));
 
         if (is_array($entry)) {
             $e = $entry;
@@ -75,13 +75,13 @@ class EmailChangeOrder
         $camperName = $this->CQModel->getCamperName($e[1]);
         $name = $camperName['FirstName'] . ' ' . $camperName['LastName'];
 
-        $this->logger->d_bug("camper_name", $name ?? 'N/A');
-        $this->logger->d_bug("session", isset($e[3]) ? $this->CQModel->getWeek($e[3]) : 'N/A');
-        $this->logger->d_bug("old_camp", $reservation['camp_name'] ?? 'N/A');
-        $this->logger->d_bug("new_camp", isset($e[2]) ? $this->CQModel->getCamp($e[2]) : 'N/A');
-        $this->logger->d_bug("pod", isset($pod['name']) ? $pod['name'] : 'N/A');
-        $this->logger->d_bug("reservation_ucid", $reservation['reservation_ucid'] ?? 'N/A');
-        $this->logger->d_bug("Additional Elements", $additionalElements);
+        PluginLogger::log("camper_name", $name ?? 'N/A');
+        PluginLogger::log("session", isset($e[3]) ? $this->CQModel->getWeek($e[3]) : 'N/A');
+        PluginLogger::log("old_camp", $reservation['camp_name'] ?? 'N/A');
+        PluginLogger::log("new_camp", isset($e[2]) ? $this->CQModel->getCamp($e[2]) : 'N/A');
+        PluginLogger::log("pod", isset($pod['name']) ? $pod['name'] : 'N/A');
+        PluginLogger::log("reservation_ucid", $reservation['reservation_ucid'] ?? 'N/A');
+        PluginLogger::log("Additional Elements", $additionalElements);
 
         // Depending on the type of change (camp change, add campfire, add camp to campfire), we use a different template
         // 1) Check to see if we're adding a camp to a campfire night
@@ -130,7 +130,7 @@ class EmailChangeOrder
         $email_template = str_replace('{{ reservation_ucid }}', $reservation['reservation_ucid'] ?? '', $email_template);
 
         if ($this->sendEmail($email_template)) {
-            $this->logger->d_bug("Change Order Email succesfully sent.");
+            PluginLogger::log("Change Order Email succesfully sent.");
             return true;
         }
     }
@@ -239,7 +239,7 @@ class EmailChangeOrder
 
         // Send the email
         if ($this->sendEmail($email_template)) {
-            $this->logger->d_bug("Play Pass Change Order Email successfully sent.");
+            PluginLogger::log("Play Pass Change Order Email successfully sent.");
             return true;
         }
 

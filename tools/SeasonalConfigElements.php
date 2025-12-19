@@ -161,7 +161,7 @@ class SeasonalConfigElements
         $sql = 'SELECT week_num FROM ' . $this->summer_weeks . ' ORDER BY week_num DESC LIMIT 1';
         try {
             $result = $this->db->runBaseQuery($sql);
-            $this->logger->d_bug("Result", $result);
+            PluginLogger::log("Result", $result);
         } catch (exception $e) {
             wp_die("Unable to query the database for the number of weeks in the summer to to a database error.");
             wp_die($e->getMessage());

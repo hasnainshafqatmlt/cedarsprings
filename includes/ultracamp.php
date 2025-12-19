@@ -66,8 +66,8 @@ class UltracampModel
         $this->setURL($url);
 
         $result = curl_exec($this->ucCurl);
-        $this->logger->d_bug("Ultracamp API Time", curl_getinfo($this->ucCurl, CURLINFO_TOTAL_TIME));
-        $this->logger->d_bug($this->url);
+        PluginLogger::log("Ultracamp API Time", curl_getinfo($this->ucCurl, CURLINFO_TOTAL_TIME));
+        PluginLogger::log($this->url);
 
         /* This type of result will come back on error
 		
@@ -77,11 +77,11 @@ class UltracampModel
         $responseCode = curl_getinfo($this->ucCurl, CURLINFO_HTTP_CODE);
 
         if ($responseCode < 200 || $responseCode >= 300) {
-            $this->logger->error("Ultracamp responded with an error when processing an API reqeust. Response Code: " . $responseCode);
+            PluginLogger::log("Ultracamp responded with an error when processing an API reqeust. Response Code: " . $responseCode);
             if (is_array($result)) {
-                $this->logger->error("Ultrcamp Full Response", $result);
+                PluginLogger::log("Ultrcamp Full Response", $result);
             } else {
-                $this->logger->error("Ultrcamp Full Response", [$result]);
+                PluginLogger::log("Ultrcamp Full Response", [$result]);
             }
         }
 
@@ -200,7 +200,7 @@ class UltracampModel
         // we filter by season, which is the year. Auto-generate the year so that I don't have to remember to change this every January
         $year = date("Y");
         if (!is_int($personId)) {
-            $this->logger->error("getReservationsByPerson failed due to invalid person ($personId).");
+            PluginLogger::log("getReservationsByPerson failed due to invalid person ($personId).");
             return false;
         }
 

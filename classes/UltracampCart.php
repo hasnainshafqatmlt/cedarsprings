@@ -224,7 +224,7 @@ class UltracampCart extends CartAndUser
             return false;
         }
 
-        $this->logger->debug("ProcessExtCart($key)", [$dbResult]);
+        PluginLogger::log("ProcessExtCart($key)", [$dbResult]);
 
         if (!is_array($dbResult)) {
             PluginLogger::log("warning:: There were no extended care options found for $key type ext care request.");
@@ -473,7 +473,7 @@ class UltracampCart extends CartAndUser
 
                 // Extended Care
                 if (!empty($entry['extCare'])) {
-                    $this->logger->debug("UltracampCart Adding Weekly Extended Care", [$entry['extCare']]);
+                    PluginLogger::log("UltracampCart Adding Weekly Extended Care", [$entry['extCare']]);
 
                     foreach ($this->processExtCare($entry['extCare']) as $extCare) {
                         $optionId = $this->getSessionOptionId($extCare['templateid'], $sessionId);
@@ -501,7 +501,7 @@ class UltracampCart extends CartAndUser
             }
 
             // while Ultracamp won't allow us to set prices in the option through the API, we're going to instead send in a discount code
-            $this->logger->debug("Play Pass Entry", $entry);
+            PluginLogger::log("Play Pass Entry", $entry);
             $discounts = [];
 
             // if the reservation has the Play Pass camp, add the NRF Adjustment Discount
@@ -644,7 +644,7 @@ class UltracampCart extends CartAndUser
             }
         }
 
-        $this->logger->debug("Day cost for day {$dayNum}: {$currentDayCost}");
+        PluginLogger::log("Day cost for day {$dayNum}: {$currentDayCost}");
 
 
         // Add lunch options if selected
@@ -667,7 +667,7 @@ class UltracampCart extends CartAndUser
 
         // Add extended care options
         if (!empty($entry['extendedCare'])) {
-            $this->logger->debug("UltracampCart Adding Play Pass Extended Care", $entry['extendedCare']);
+            PluginLogger::log("UltracampCart Adding Play Pass Extended Care", $entry['extendedCare']);
 
             if (!empty($entry['extendedCare']['morning']) && is_array($entry['extendedCare']['morning'])) {
                 foreach ($entry['extendedCare']['morning'] as $dayNum) {
@@ -791,7 +791,7 @@ class UltracampCart extends CartAndUser
             11 => ['sessionid' => '496241', 'discountid' => 1383752]
         ];
 
-        $this->logger->debug("Looking up Play Pass Discount Code for Week $weekNum", $sessionDiscountMap[$weekNum]);
+        PluginLogger::log("Looking up Play Pass Discount Code for Week $weekNum", $sessionDiscountMap[$weekNum]);
 
         if (empty($sessionDiscountMap[$weekNum]['discountid'])) {
             return [];

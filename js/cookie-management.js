@@ -5,6 +5,7 @@ function setCookie(cname, cvalue, exdays = 1) {
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
   let expires = "expires=" + d.toUTCString();
   const paths = [
+    "/",
     "/camps/queue",
     "/camps-summer-queue-registration",
     "/camps/queue/submitcamperqueue",
@@ -39,6 +40,7 @@ function deleteCookie(cname) {
   d.setTime(d.getTime() - 1000);
   let expires = "expires=" + d.toUTCString();
   const paths = [
+    "/",
     "/camps/queue",
     "/camps-summer-queue-registration",
     "/camps/queue/submitcamperqueue",

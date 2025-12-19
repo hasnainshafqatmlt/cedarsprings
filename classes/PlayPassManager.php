@@ -19,7 +19,6 @@ class PlayPassManager
     function __construct($logger = null)
     {
         $this->setLogger($logger);
-
         require_once plugin_dir_path(__FILE__) . '../classes/config.php';
         require_once plugin_dir_path(__FILE__) . '../db/db-reservations.php';
         require_once plugin_dir_path(__FILE__) . '../api/ultracamp/CartAndUser.php';
@@ -35,9 +34,9 @@ class PlayPassManager
         }
 
         if ($this->production) {
-            $this->logger->d_bug("PlayPassManager is operating in production!");
+            PluginLogger::log("PlayPassManager is operating in production!");
         } else {
-            $this->logger->d_bug("PlayPassManager is operating in Dev Mode");
+            PluginLogger::log("PlayPassManager is operating in Dev Mode");
         }
     }
 
@@ -63,7 +62,7 @@ class PlayPassManager
         try {
             $weeks = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            $this->logger->error("Unable to load available weeks in PlayPassManager: " . $e->getMessage());
+            PluginLogger::log("Unable to load available weeks in PlayPassManager: " . $e->getMessage());
             return [];
         }
 
@@ -77,7 +76,7 @@ class PlayPassManager
     function generateCamperOptions($accountId)
     {
         if (empty($accountId)) {
-            $this->logger->error("No account ID provided for camper options generation");
+            PluginLogger::log("No account ID provided for camper options generation");
             return '<p class="error">Error loading campers. Please try again.</p>';
         }
 
@@ -85,7 +84,7 @@ class PlayPassManager
         $people = $this->uc->getPeopleByAccount($accountId);
 
         if (empty($people)) {
-            $this->logger->error("No campers found for account $accountId");
+            PluginLogger::log("No campers found for account $accountId");
             return '<p class="error">No eligible campers found on this account.</p>';
         }
 
@@ -149,7 +148,7 @@ class PlayPassManager
         try {
             $weekInfo = $this->db->runQuery($sql, 'i', $weekNum);
         } catch (Exception $e) {
-            $this->logger->error("Unable to get week information: " . $e->getMessage());
+            PluginLogger::log("Unable to get week information: " . $e->getMessage());
             return ['error' => 'Error retrieving week information'];
         }
 
@@ -172,7 +171,7 @@ class PlayPassManager
         try {
             $registeredDays = $this->db->runQuery($sql, 'ii', [$camperId, $weekNum]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to check registered days: " . $e->getMessage());
+            PluginLogger::log("Unable to check registered days: " . $e->getMessage());
             $registeredDays = [];
         }
 
@@ -193,7 +192,7 @@ class PlayPassManager
         try {
             $dayOptions = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            $this->logger->error("Unable to get day options: " . $e->getMessage());
+            PluginLogger::log("Unable to get day options: " . $e->getMessage());
             return ['error' => 'Error retrieving day options'];
         }
 
@@ -239,7 +238,7 @@ class PlayPassManager
         $dayCost = $this->getPlayPassDayCost($weekNum);
         $options['day_cost'] = $dayCost;
 
-        $this->logger->debug("Day Pass Options", $options);
+        PluginLogger::log("Day Pass Options", $options);
 
         return $options;
     }
@@ -257,7 +256,7 @@ class PlayPassManager
         try {
             $option = $this->db->runQuery($sql, 'ii', [$templateId, $sessionId]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to check day availability: " . $e->getMessage());
+            PluginLogger::log("Unable to check day availability: " . $e->getMessage());
             return false;
         }
 
@@ -281,7 +280,7 @@ class PlayPassManager
         try {
             $count = $this->db->runQuery($sql, 'ii', [$templateId, $sessionId]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to count current registrations: " . $e->getMessage());
+            PluginLogger::log("Unable to count current registrations: " . $e->getMessage());
             return false;
         }
 
@@ -329,7 +328,7 @@ class PlayPassManager
         try {
             $pods = $this->db->runQuery($sql, 's', $dayName);
         } catch (Exception $e) {
-            $this->logger->error("Unable to get pod options: " . $e->getMessage());
+            PluginLogger::log("Unable to get pod options: " . $e->getMessage());
             return [];
         }
 
@@ -365,7 +364,7 @@ class PlayPassManager
             return ['success' => false, 'message' => 'Please select a transportation window'];
         }
 
-        $this->logger->debug("Process Registration Data", $data);
+        PluginLogger::log("Process Registration Data", $data);
 
         // Get week and session info
         $sql = "SELECT session_id, start_date FROM {$this->tables->summer_weeks} WHERE week_num = ?";
@@ -376,7 +375,7 @@ class PlayPassManager
             }
             $sessionId = $weekInfo[0]['session_id'];
         } catch (Exception $e) {
-            $this->logger->error("Unable to get session ID for week {$data['week']}: " . $e->getMessage());
+            PluginLogger::log("Unable to get session ID for week {$data['week']}: " . $e->getMessage());
             return ['success' => false, 'message' => 'Error retrieving week information'];
         }
 
@@ -399,7 +398,7 @@ class PlayPassManager
                 $accountId = $accountResult[0]['account_ucid'];
             }
         } catch (Exception $e) {
-            $this->logger->error("Unable to get account ID for camper {$data['camper_id']}: " . $e->getMessage());
+            PluginLogger::log("Unable to get account ID for camper {$data['camper_id']}: " . $e->getMessage());
             return ['success' => false, 'message' => 'Error retrieving camper information'];
         }
 
@@ -423,7 +422,7 @@ class PlayPassManager
             'account_id' => $accountId
         ];
 
-        $this->logger->debug("Play Pass data stored in session", $_SESSION['playPassData'][$cartEntry]);
+        PluginLogger::log("Play Pass data stored in session", $_SESSION['playPassData'][$cartEntry]);
 
         return [
             'success' => true,
@@ -442,16 +441,16 @@ class PlayPassManager
     function buildCartOptions($cartEntry, $data)
     {
         if (empty($data)) {
-            $this->logger->error("No Play Pass data provided for cart entry: $cartEntry");
+            PluginLogger::log("No Play Pass data provided for cart entry: $cartEntry");
             return false;
         }
 
-        $this->logger->debug("buildCartOptions Data", $data);
+        PluginLogger::log("buildCartOptions Data", $data);
 
         // Get camper info
         $camper = $this->CQModel->getCamperName($data['camper_id']);
         if (empty($camper)) {
-            $this->logger->error("Unable to get camper information for ID: {$data['camper_id']}");
+            PluginLogger::log("Unable to get camper information for ID: {$data['camper_id']}");
             return false;
         }
 
@@ -459,10 +458,10 @@ class PlayPassManager
         $sessionId = isset($data['session_id']) ? $data['session_id'] : null;
         if (!$sessionId) {
             $sessionId = $this->CQModel->getSessionIdFromWeekNumber($data['week']);
-            $this->logger->debug("Looking up session ID for week {$data['week']}: $sessionId");
+            PluginLogger::log("Looking up session ID for week {$data['week']}: $sessionId");
 
             if (!$sessionId) {
-                $this->logger->error("Unable to determine session ID for week {$data['week']}");
+                PluginLogger::log("Unable to determine session ID for week {$data['week']}");
                 return false;
             }
         }
@@ -518,7 +517,7 @@ class PlayPassManager
             'transportation_template_id' => $windowTemplateId
         ];
 
-        $this->logger->debug("Cart options built with window: $windowName, zone: $zoneName", [
+        PluginLogger::log("Cart options built with window: $windowName, zone: $zoneName", [
             'cart_structure' => json_encode($cartOptions[$cartEntry])
         ]);
 
@@ -603,7 +602,7 @@ class PlayPassManager
     function storeDailyReservations($reservationId, $playPassData)
     {
         if (empty($reservationId) || empty($playPassData)) {
-            $this->logger->error("Missing reservation ID or Play Pass data for daily reservations");
+            PluginLogger::log("Missing reservation ID or Play Pass data for daily reservations");
             return false;
         }
 
@@ -614,7 +613,7 @@ class PlayPassManager
         foreach ($playPassData['days'] as $dayNum) {
             $dayTemplateId = $this->getDayTemplateId($dayNum);
             if (!$dayTemplateId) {
-                $this->logger->warning("No template ID found for day $dayNum");
+                PluginLogger::log("warning:: No template ID found for day $dayNum");
                 continue;
             }
 
@@ -626,7 +625,7 @@ class PlayPassManager
             try {
                 $this->db->insert($sql, 'iii', [$reservationId, $dayNum, $dayTemplateId]);
             } catch (Exception $e) {
-                $this->logger->error("Unable to store daily reservation for day $dayNum: " . $e->getMessage());
+                PluginLogger::log("Unable to store daily reservation for day $dayNum: " . $e->getMessage());
                 $success = false;
             }
         }
@@ -642,7 +641,7 @@ class PlayPassManager
                     $lunchTemplateId = $this->getLunchTemplateId($dayNum);
                     $this->db->insert($sql, 'iii', [$reservationId, $dayNum, $lunchTemplateId]);
                 } catch (Exception $e) {
-                    $this->logger->error("Unable to store lunch option for day $dayNum: " . $e->getMessage());
+                    PluginLogger::log("Unable to store lunch option for day $dayNum: " . $e->getMessage());
                     $success = false;
                 }
             }
@@ -659,7 +658,7 @@ class PlayPassManager
                     $careTemplateId = $this->getMorningCareTemplateId($this->getDayName($dayNum));
                     $this->db->insert($sql, 'iii', [$reservationId, $dayNum, $careTemplateId]);
                 } catch (Exception $e) {
-                    $this->logger->error("Unable to store morning care for day $dayNum: " . $e->getMessage());
+                    PluginLogger::log("Unable to store morning care for day $dayNum: " . $e->getMessage());
                     $success = false;
                 }
             }
@@ -675,7 +674,7 @@ class PlayPassManager
                     $careTemplateId = $this->getAfternoonCareTemplateId($this->getDayName($dayNum));
                     $this->db->insert($sql, 'iii', [$reservationId, $dayNum, $careTemplateId]);
                 } catch (Exception $e) {
-                    $this->logger->error("Unable to store afternoon care for day $dayNum: " . $e->getMessage());
+                    PluginLogger::log("Unable to store afternoon care for day $dayNum: " . $e->getMessage());
                     $success = false;
                 }
             }
@@ -700,18 +699,18 @@ class PlayPassManager
             // Try to use the config value
             if (isset($this->tables->playPassDailyCost) && $this->tables->playPassDailyCost > 0) {
                 $configCost = $this->tables->playPassDailyCost;
-                $this->logger->debug("Using config cost for Play Pass: $configCost");
+                PluginLogger::log("Using config cost for Play Pass: $configCost");
                 return $configCost;
             }
 
             // If we get here, the config value is missing or invalid
-            $this->logger->error("Failed to retrieve Play Pass day cost for week $weekNum. " .
+            PluginLogger::log("Failed to retrieve Play Pass day cost for week $weekNum. " .
                 "Config value: " . (isset($this->tables->playPassDailyCost) ? $this->tables->playPassDailyCost : "not set"));
 
             // Return fallback value
             return 68;
         } catch (Exception $e) {
-            $this->logger->error("Exception in getPlayPassDayCost for week $weekNum: " . $e->getMessage());
+            PluginLogger::log("Exception in getPlayPassDayCost for week $weekNum: " . $e->getMessage());
             return 68;
         }
     }
@@ -753,7 +752,7 @@ class PlayPassManager
         // Get session ID for the week
         $sessionId = $this->CQModel->getSessionIdFromWeekNumber($weekNum);
         if (!$sessionId) {
-            $this->logger->error("Unable to determine session ID for week {$weekNum}");
+            PluginLogger::log("Unable to determine session ID for week {$weekNum}");
             return 0;
         }
 
@@ -763,14 +762,14 @@ class PlayPassManager
         try {
             $option = $this->db->runQuery($sql, 'ii', [$mondayTemplateId, $sessionId]);
         } catch (Exception $e) {
-            $this->logger->error("Unable to get day cost: " . $e->getMessage());
+            PluginLogger::log("Unable to get day cost: " . $e->getMessage());
             return 0;
         }
 
-        $this->logger->debug("getPlayPassDayCost($weekNum)", $option ?: []);
+        PluginLogger::log("getPlayPassDayCost($weekNum)", $option ?: []);
 
         if (empty($option)) {
-            $this->logger->debug("getPlayPassDailyCost returned no cost value for", compact('weekNum', 'mondayTemplateId'));
+            PluginLogger::log("getPlayPassDailyCost returned no cost value for", compact('weekNum', 'mondayTemplateId'));
             return 0;
         }
 
@@ -831,12 +830,12 @@ class PlayPassManager
         try {
             $weekInfo = $this->db->runQuery($sql, 'i', $weekNum);
             if (empty($weekInfo)) {
-                $this->logger->error("Invalid week selected");
+                PluginLogger::log("Invalid week selected");
                 return [];
             }
             $sessionId = $weekInfo[0]['session_id'];
         } catch (Exception $e) {
-            $this->logger->error("Unable to get session ID for week {$weekNum}: " . $e->getMessage());
+            PluginLogger::log("Unable to get session ID for week {$weekNum}: " . $e->getMessage());
             return [];
         }
 
@@ -848,11 +847,11 @@ class PlayPassManager
         try {
             $reservations = $this->db->runQuery($sql, 'ii', [$camperId, $weekNum]);
             if (empty($reservations)) {
-                $this->logger->debug("No reservations found for camper {$camperId} in week {$weekNum}");
+                PluginLogger::log("No reservations found for camper {$camperId} in week {$weekNum}");
                 return [];
             }
         } catch (Exception $e) {
-            $this->logger->error("Error retrieving reservations: " . $e->getMessage());
+            PluginLogger::log("Error retrieving reservations: " . $e->getMessage());
             return [];
         }
 
@@ -866,11 +865,11 @@ class PlayPassManager
         try {
             $results = $this->db->runQuery($sql, 'i', $reservationId);
             if (empty($results)) {
-                $this->logger->debug("No daily reservations found for reservation {$reservationId}");
+                PluginLogger::log("No daily reservations found for reservation {$reservationId}");
                 return [];
             }
         } catch (Exception $e) {
-            $this->logger->error("Error retrieving daily reservations: " . $e->getMessage());
+            PluginLogger::log("Error retrieving daily reservations: " . $e->getMessage());
             return [];
         }
 
@@ -880,7 +879,7 @@ class PlayPassManager
             $days[] = (int)$row['day'];
         }
 
-        $this->logger->debug("Registered days for camper {$camperId} in week {$weekNum}: " . implode(', ', $days));
+        PluginLogger::log("Registered days for camper {$camperId} in week {$weekNum}: " . implode(', ', $days));
         return $days;
     }
 
@@ -893,7 +892,7 @@ class PlayPassManager
     function getRegisteredWeeks($camperId)
     {
         if (!$camperId) {
-            $this->logger->error("Invalid camper ID for getRegisteredWeeks");
+            PluginLogger::log("Invalid camper ID for getRegisteredWeeks");
             return [];
         }
 
@@ -906,7 +905,7 @@ class PlayPassManager
             $results = $this->db->runQuery($sql, 'i', $camperId);
 
             if (empty($results)) {
-                $this->logger->debug("No registered weeks found for camper $camperId");
+                PluginLogger::log("No registered weeks found for camper $camperId");
                 return [];
             }
 
@@ -916,10 +915,10 @@ class PlayPassManager
                 $weeks[] = (int)$row['week_number'];
             }
 
-            $this->logger->debug("Registered weeks for camper $camperId: " . implode(', ', $weeks));
+            PluginLogger::log("Registered weeks for camper $camperId: " . implode(', ', $weeks));
             return $weeks;
         } catch (Exception $e) {
-            $this->logger->error("Error retrieving registered weeks: " . $e->getMessage());
+            PluginLogger::log("Error retrieving registered weeks: " . $e->getMessage());
             return [];
         }
     }
@@ -938,12 +937,12 @@ class PlayPassManager
         try {
             $weekInfo = $this->db->runQuery($sql, 'i', $weekNum);
             if (empty($weekInfo)) {
-                $this->logger->error("Invalid week selected");
+                PluginLogger::log("Invalid week selected");
                 return [];
             }
             $sessionId = $weekInfo[0]['session_id'];
         } catch (Exception $e) {
-            $this->logger->error("Unable to get session ID for week {$weekNum}: " . $e->getMessage());
+            PluginLogger::log("Unable to get session ID for week {$weekNum}: " . $e->getMessage());
             return [];
         }
 
@@ -956,11 +955,11 @@ class PlayPassManager
         try {
             $reservations = $this->db->runQuery($sql, 'ii', [$camperId, $weekNum]);
             if (empty($reservations)) {
-                $this->logger->error("No reservations found for camper {$camperId} in week {$weekNum}");
+                PluginLogger::log("No reservations found for camper {$camperId} in week {$weekNum}");
                 return [];
             }
         } catch (Exception $e) {
-            $this->logger->error("Error retrieving reservations: " . $e->getMessage());
+            PluginLogger::log("Error retrieving reservations: " . $e->getMessage());
             return [];
         }
 
@@ -987,7 +986,7 @@ class PlayPassManager
 
         // If this is not a Play Pass registration, just return basic details
         if ($campName !== 'Play Pass') {
-            $this->logger->debug("Not a Play Pass registration: {$campName}");
+            PluginLogger::log("Not a Play Pass registration: {$campName}");
             return $result;
         }
 
@@ -998,11 +997,11 @@ class PlayPassManager
         try {
             $options = $this->db->runQuery($sql, 'i', $reservationId);
             if (empty($options)) {
-                $this->logger->debug("No daily options found for reservation {$reservationId}");
+                PluginLogger::log("No daily options found for reservation {$reservationId}");
                 return $result; // Return with empty arrays for options
             }
 
-            $this->logger->debug("Retrieved daily options:", $options);
+            PluginLogger::log("Retrieved daily options:", $options);
 
             // Define template IDs for extended care
             $morningExtendedCareIds = [150259, 150260, 150261, 150263, 150264];
@@ -1028,7 +1027,7 @@ class PlayPassManager
                         } elseif (in_array($templateId, $afternoonExtendedCareIds)) {
                             $result['afternoon_care'][] = $day;
                         } else {
-                            $this->logger->debug("Unknown extended care template ID: {$templateId}");
+                            PluginLogger::log("Unknown extended care template ID: {$templateId}");
                         }
                         break;
                     case 'morning_care':
@@ -1040,7 +1039,7 @@ class PlayPassManager
                 }
             }
         } catch (Exception $e) {
-            $this->logger->error("Error retrieving daily options: " . $e->getMessage());
+            PluginLogger::log("Error retrieving daily options: " . $e->getMessage());
             return $result; // Return with empty arrays for options
         }
 
@@ -1068,7 +1067,7 @@ class PlayPassManager
 
             return $registrations[0];
         } catch (Exception $e) {
-            $this->logger->error("Error checking for regular registration: " . $e->getMessage());
+            PluginLogger::log("Error checking for regular registration: " . $e->getMessage());
             return false;
         }
     }
@@ -1094,7 +1093,7 @@ class PlayPassManager
 
             return true;
         } catch (Exception $e) {
-            $this->logger->error("Error checking for Play Pass registration: " . $e->getMessage());
+            PluginLogger::log("Error checking for Play Pass registration: " . $e->getMessage());
             return false;
         }
     }

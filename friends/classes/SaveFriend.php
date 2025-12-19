@@ -165,7 +165,7 @@ class SaveFriend
 
         // error log review shows an issue here where we are passing in a null for source_id and it's failing to save as a result
         if (empty($sourceId)) {
-            $this->logger->warning("SourceID is Null for storeError() in SaveFriends.php. The SQL will reject this. Setting sourceId to 0 as an interim solution. This should not be possible, but somehow has happened.", array('sourceId' => $sourceId, 'firstRecord' => $first_record, 'reason' => $reason));
+            PluginLogger::log("SourceID is Null for storeError() in SaveFriends.php. The SQL will reject this. Setting sourceId to 0 as an interim solution. This should not be possible, but somehow has happened.", array('sourceId' => $sourceId, 'firstRecord' => $first_record, 'reason' => $reason));
 
             $sourceId = 0;
         }

@@ -47,9 +47,9 @@ class PodBuilder
         }
 
         if ($this->production) {
-            $this->logger->d_bug("Pod Builder is Operating in production!");
+            PluginLogger::log("Pod Builder is Operating in production!");
         } else {
-            $this->logger->d_bug("Pod Builder is Operating in Dev Mode");
+            PluginLogger::log("Pod Builder is Operating in Dev Mode");
         }
     }
 
@@ -101,7 +101,7 @@ class PodBuilder
             $this->podRanking[$entry]['camp'] = $camp;
             $this->podRanking[$entry]['week'] = $week;
 
-            $this->logger->d_bug("Entry $entry has become", $this->podRanking[$entry]);
+            PluginLogger::log("Entry $entry has become", $this->podRanking[$entry]);
 
             // load all of the possible pods for this camper
             $this->podRanking[$entry]['pods'] = $this->listAvailablePods($camper, $camp, $week);
@@ -135,7 +135,7 @@ class PodBuilder
         // friendly siblings doesn't mean that all siblings have the same age, so that matters
         // at the end of this set of loops, every pod which could be shared by siblings will have an array of the matching siblings
         if ($this->friendlySiblings) {
-            $this->logger->d_bug("Checking friendly sibling pod matches.");
+            PluginLogger::log("Checking friendly sibling pod matches.");
             // itterate through the pods, record the number of siblings who would also be looking at this pod
 
             // Itterate through all of the entries
@@ -145,12 +145,12 @@ class PodBuilder
                 if (empty($record['pods'])) {
                     // don't throw an error when it's accelerate - we know there are not any pods for that camp
                     if ($record['camp'] != 9999) {
-                        $this->logger->warning("There are no available pods for camp " . $record['camp'] . ", on entry $a.");
+                        PluginLogger::log("There are no available pods for camp " . $record['camp'] . ", on entry $a.");
                     }
                     continue;
                 }
 
-                $this->logger->d_bug("Looking through the camps for camper " . $this->CQModel->campers[$record['camper']]['firstName']);
+                PluginLogger::log("Looking through the camps for camper " . $this->CQModel->campers[$record['camper']]['firstName']);
 
                 // itterate through the record's pods
                 foreach ($record['pods'] as $p) {
@@ -175,7 +175,7 @@ class PodBuilder
                         foreach ($sibling['pods'] as $c => $sibPod) {
 
                             if ($sibPod['name'] == $p['name']) {
-                                $this->logger->d_bug("Adding Sibling Pod: " . $sibPod['name']);
+                                PluginLogger::log("Adding Sibling Pod: " . $sibPod['name']);
                                 $this->podRanking[$b]['pods'][$c]['sibling_pod'][] = $this->podRanking[$a]['camper'];
                             }
                         }
@@ -191,7 +191,7 @@ class PodBuilder
             if (empty($v['pods'])) {
                 if (!isset($record) || $record['camp'] != 9999) {
                     // I don't need to know about accelerate - that is expected
-                    $this->logger->warning("There are no available pods for the camp " . $v['camp'] . " and week " . $v['week'] . ".");
+                    PluginLogger::log("There are no available pods for the camp " . $v['camp'] . " and week " . $v['week'] . ".");
                 }
                 continue;
             }
@@ -211,7 +211,7 @@ class PodBuilder
             }
 
             // save this information in the entry so we can use it as our test of a good pod candidate
-            $this->logger->d_bug("For camper " . $this->CQModel->campers[$v['camper']]['firstName'] . ", maxFriends = $maxFriends and maxSiblings = $maxSiblings.");
+            PluginLogger::log("For camper " . $this->CQModel->campers[$v['camper']]['firstName'] . ", maxFriends = $maxFriends and maxSiblings = $maxSiblings.");
             $this->podRanking[$k]['maxFriends'] = $maxFriends;
             $this->podRanking[$k]['maxSiblings'] = $maxSiblings;
         }
@@ -227,7 +227,7 @@ class PodBuilder
 
             // if there is already a pod choice (from a sibling pod), move on
             if (!empty($v['podChoice'])) {
-                $this->logger->d_bug("Skipping entry $k due to existing pod choice", $v['podChoice']);
+                PluginLogger::log("Skipping entry $k due to existing pod choice", $v['podChoice']);
                 continue;
             }
 
@@ -235,7 +235,7 @@ class PodBuilder
             // remember that to be on the list, it already has been confirmed to have capacity for 1 and be of the right age group
             if ($v['maxFriends'] == 0 && $v['maxSiblings'] == 0) {
                 $this->podRanking[$k]['podChoice'] = $v['pods'][0];
-                $this->logger->d_bug("Setting pod " . $v['pods'][0]['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with no friend or sibling considerations.", $k);
+                PluginLogger::log("Setting pod " . $v['pods'][0]['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with no friend or sibling considerations.", $k);
 
                 // we need to mark the capacity of the chosen pod down by one so that we don't keep trying to put campers into it
                 // we also need to remove it from the "availble" list for any campers if it goes to zero
@@ -251,7 +251,7 @@ class PodBuilder
                     // find the first pod that has the same max friend count that we encountered when we checked all of the friend counts
                     if (!empty($pod['friends']) && $pod['friends'] == $v['maxFriends']) {
                         $this->podRanking[$k]['podChoice'] = $pod;
-                        $this->logger->d_bug("Setting pod " . $pod['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with " . $v['maxFriends'] . " friend and no siblings.", $k);
+                        PluginLogger::log("Setting pod " . $pod['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with " . $v['maxFriends'] . " friend and no siblings.", $k);
 
                         // we need to mark the capacity of the chosen pod down by one so that we don't keep trying to put campers into it
                         // we also need to remove it from the "availble" list for any campers if it goes to zero
@@ -312,7 +312,7 @@ class PodBuilder
                 arsort($tempRanking);
                 $podId = array_key_first($tempRanking);
 
-                $this->logger->d_bug("Chosen Pod for siblings: $podId", $tempRanking);
+                PluginLogger::log("Chosen Pod for siblings: $podId", $tempRanking);
 
                 // loop through the pods until we find this one, and then set it as the pod choice for the current camper and all associated siblings
                 foreach ($v['pods'] as $p) {
@@ -323,13 +323,13 @@ class PodBuilder
                 }
 
                 $this->podRanking[$k]['podChoice'] = $chosenPod;
-                $this->logger->d_bug("Setting pod " . $chosenPod['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with " . $v['maxFriends'] . " friend and " . $v['maxSiblings'] . " sibling match.", $k);
+                PluginLogger::log("Setting pod " . $chosenPod['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with " . $v['maxFriends'] . " friend and " . $v['maxSiblings'] . " sibling match.", $k);
 
                 $this->reducePodCapacity($chosenPod['templateid'], $v['week']);
 
                 // loop through the siblings and add the same pod
                 foreach ($chosenPod['sibling_pod'] as $siblingId) {
-                    $this->logger->d_bug("Searching for sibling $siblingId, week $week to add sibling pod choice", $chosenPod);
+                    PluginLogger::log("Searching for sibling $siblingId, week $week to add sibling pod choice", $chosenPod);
                     $sibEntry = $this->findEntryByCamper($siblingId, $v['week']);
 
                     // don't overwrite existing pod choices 
@@ -339,11 +339,11 @@ class PodBuilder
                         // removing data from sibling entry, such as invalid friend count and irrelevant sibling link
                         $this->podRanking[$sibEntry]['podChoice'] = array('templateid' => $chosenPod['templateid'], 'name' => $chosenPod['name']);
 
-                        $this->logger->d_bug("Setting pod " . $chosenPod['name'] . " for camper " . $this->CQModel->campers[$siblingId]['firstName'] . " on account of a sibling match.", $k);
+                        PluginLogger::log("Setting pod " . $chosenPod['name'] . " for camper " . $this->CQModel->campers[$siblingId]['firstName'] . " on account of a sibling match.", $k);
 
                         $this->reducePodCapacity($chosenPod['templateid'], $v['week']);
                     } else {
-                        $this->logger->d_bug("Matched sibling " . $this->CQModel->campers[$siblingId]['firstName'] . " already has a pod set for this camp.");
+                        PluginLogger::log("Matched sibling " . $this->CQModel->campers[$siblingId]['firstName'] . " already has a pod set for this camp.");
                     }
                 }
 
@@ -356,7 +356,7 @@ class PodBuilder
             foreach ($v['pods'] as $pod) {
                 if (empty($pod['friends']) || $pod['friends'] == $v['maxFriends']) {
                     $this->podRanking[$k]['podChoice'] = $pod;
-                    $this->logger->d_bug("Setting pod " . $pod['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with " . $v['maxFriends'] . " friends. Sibling considerations were ignored on account of pod capacities.", $k);
+                    PluginLogger::log("Setting pod " . $pod['name'] . " for camper " . $this->CQModel->campers[$v['camper']]['firstName'] . " with " . $v['maxFriends'] . " friends. Sibling considerations were ignored on account of pod capacities.", $k);
 
                     $this->reducePodCapacity($pod['templateid'], $v['week']);
 
@@ -369,7 +369,7 @@ class PodBuilder
 
 
 
-        $this->logger->d_bug("Pod Ranking", $this->podRanking);
+        PluginLogger::log("Pod Ranking", $this->podRanking);
 
         return $this->podRanking;
     }
@@ -412,13 +412,13 @@ class PodBuilder
         try {
             $result = $this->db->runQuery($sql, 'sii', array($campName, $age, $age));
         } catch (Exception $e) {
-            $this->logger->error("Unable to list all available pods from the DB: " . $e->getMessage());
+            PluginLogger::log("Unable to list all available pods from the DB: " . $e->getMessage());
             return false;
         }
 
         // if we don't get any pods back, something is wrong, and we're done here
         if (empty($result)) {
-            $this->logger->warning("Unable to find any available pods for camp $campName where the camper age is $age.");
+            PluginLogger::log("Unable to find any available pods for camp $campName where the camper age is $age.");
             return false;
         }
 
@@ -430,7 +430,7 @@ class PodBuilder
             try {
                 $capResults = $this->db->runQuery($sql, 'i', $r['templateid']);
             } catch (Exception $e) {
-                $this->logger->error("Unable to list the capacity of pod " . $r['name'] . ' :' . $e->getMessage());
+                PluginLogger::log("Unable to list the capacity of pod " . $r['name'] . ' :' . $e->getMessage());
                 continue;
             }
 
@@ -459,7 +459,7 @@ class PodBuilder
      */
     function reducePodCapacity($templateId, $week)
     {
-        $this->logger->d_bug("Starting ReducePodCapacity($templateId, $week).");
+        PluginLogger::log("Starting ReducePodCapacity($templateId, $week).");
         // Itterate through the entries where a pod choice hasn't been made.
         // Update the capacity everywhere the template is found, removing the entry whereever it goes to zero 
         foreach ($this->podRanking as $key => $entry) {
@@ -473,7 +473,7 @@ class PodBuilder
             } // if there are not any pods available, don't bother
 
             if (!empty($entry['podChoice'])) {
-                $this->logger->d_bug("Skipping cap reduction due to already set podChoice for $key.", $entry['podChoice']);
+                PluginLogger::log("Skipping cap reduction due to already set podChoice for $key.", $entry['podChoice']);
                 continue;
             } // no need to mess with those which already have a pod choice
 
@@ -481,13 +481,13 @@ class PodBuilder
             foreach ($entry['pods'] as $podId => $pods) {
                 if ($pods['templateid'] == $templateId) {
                     // determine if we're reducing the capacity, or removing it from the array
-                    //                    $this->logger->d_bug("Key: $key, podId: $podId");
+                    //                    PluginLogger::log("Key: $key, podId: $podId");
                     if ($pods['capacity'] == 1) {
                         // remove the entry
-                        $this->logger->d_bug("Removing full pod", $this->podRanking[$key]['pods'][$podId]);
+                        PluginLogger::log("Removing full pod", $this->podRanking[$key]['pods'][$podId]);
                         unset($this->podRanking[$key]['pods'][$podId]);
                     } else {
-                        $this->logger->d_bug("Reducing the capacity of a pod", $this->podRanking[$key]['pods'][$podId]);
+                        PluginLogger::log("Reducing the capacity of a pod", $this->podRanking[$key]['pods'][$podId]);
                         $this->podRanking[$key]['pods'][$podId]['capacity']--;
                     }
                 }

@@ -45,9 +45,9 @@ class FriendManager
         }
 
         if ($this->production) {
-            $this->logger->d_bug("Friend Manager is Operating in production!");
+            PluginLogger::log("Friend Manager is Operating in production!");
         } else {
-            $this->logger->d_bug("Friend Manager is Operating in Dev Mode");
+            PluginLogger::log("Friend Manager is Operating in Dev Mode");
         }
     }
 
@@ -143,7 +143,7 @@ class FriendManager
     function findFriendsInCamp($camper, $camp, $week)
     {
         // List all friends -  
-        $this->logger->d_bug("Looking for friends.", array("camper" => $camper, "camp" => $camp, "week" => $week));
+        PluginLogger::log("Looking for friends.", array("camper" => $camper, "camp" => $camp, "week" => $week));
         $sql = "SELECT friend_ucid FROM " . $this->tables->friends_table . " WHERE camper_ucid = ?";
         try {
             $friends = $this->db->runQuery($sql, 'i', $camper);
@@ -154,7 +154,7 @@ class FriendManager
 
         // if there are not any friends, then we're done here
         if (empty($friends)) {
-            $this->logger->d_bug("No Friends Found.");
+            PluginLogger::log("No Friends Found.");
             return true;
         }
 
@@ -165,7 +165,7 @@ class FriendManager
                     WHERE templateid = ?)";
 
         $pods = array(); // quick search for ensuring we don't do duplicates
-        $this->logger->d_bug(count($friends) . " Friends Found, looking for shared camps",  array($friends, $week, $camp));
+        PluginLogger::log(count($friends) . " Friends Found, looking for shared camps",  array($friends, $week, $camp));
 
         foreach ($friends as $f) {
             try {
@@ -184,7 +184,7 @@ class FriendManager
             }
         }
 
-        $this->logger->d_bug("Returning matching Pods", $pods);
+        PluginLogger::log("Returning matching Pods", $pods);
 
         return $pods;
     }
@@ -194,7 +194,7 @@ class FriendManager
      */
     function saveFriends($camper, $friends)
     {
-        $this->logger->d_bug("Starting saveFriends with camper $camper and friends $friends.");
+        PluginLogger::log("Starting saveFriends with camper $camper and friends $friends.");
 
         // use Friend Finder to tease names out of the string
         $strings = $this->UltracampFriends->findNames($friends);
@@ -217,14 +217,14 @@ class FriendManager
             $names = array_reverse($names);
 
             // we'll keep checking names until we get a hit or run out of names to try
-            $this->logger->d_bug("Looking for match by name.", $names);
+            PluginLogger::log("Looking for match by name.", $names);
             unset($match);
 
             foreach ($names as $k => $n) {
                 // ensure that we aren't searching for a middle initial or something
                 // also skips when there are no names supplied
                 if (strlen($n) < 3) {
-                    $this->logger->d_bug("Skipping the name $n as it is too short.");
+                    PluginLogger::log("Skipping the name $n as it is too short.");
                     continue;
                 }
 
@@ -241,7 +241,7 @@ class FriendManager
                         foreach ($search as $dbResult) {
                             if ($a != $k && $dbResult['first_name'] == $b) {
                                 $match = $dbResult;
-                                $this->logger->d_bug("Friend Match found. Entry: $name, Result", $match);
+                                PluginLogger::log("Friend Match found. Entry: $name, Result", $match);
                                 break 3;
                             }
                         }
@@ -263,7 +263,7 @@ class FriendManager
                 }
 
                 if (!empty($dupeCheck)) {
-                    $this->logger->d_bug("Friend already exists in the database.");
+                    PluginLogger::log("Friend already exists in the database.");
                     continue;
                 }
 
@@ -295,7 +295,7 @@ class FriendManager
                 }
             } else {
                 // Need to save names that don't come back with a hit (in case they are mis-spelled or something else of the sort)
-                $this->logger->d_bug("Recording low confidence result.", $name);
+                PluginLogger::log("Recording low confidence result.", $name);
 
                 $reason = "Unable to match a camper with customer entry in the Camper Queue.";
                 if (!$this->FriendFinder->snoozeEarlyFriends($camper, $name, 'Camper Queue Entry', time(), $reason)) {
@@ -308,7 +308,7 @@ class FriendManager
 
         // Need to save errors for processing
         if (count($strings['errors']) > 0) {
-            $this->logger->d_bug("Recording errors resulting from the name finder.", $strings['errors']);
+            PluginLogger::log("Recording errors resulting from the name finder.", $strings['errors']);
 
             foreach ($strings['errors'] as $name) {
                 // source (i.e. ultracamp)

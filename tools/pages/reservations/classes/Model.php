@@ -56,7 +56,7 @@ class BaseModel
 		if (!is_object($this->logger))
 			return false;
 
-		$this->logger->d_bug($message, $data);
+		PluginLogger::log($message, $data);
 
 		return true;
 	}
@@ -70,7 +70,7 @@ class BaseModel
 		try {
 			$sessions = $this->db->runBaseQuery($sql);
 		} catch (Exception $e) {
-			$this->logger->error("Unable to retrieve the session list from the database in the reservations Model: " . $e->getMessage());
+			PluginLogger::log("Unable to retrieve the session list from the database in the reservations Model: " . $e->getMessage());
 			return false;
 		}
 
@@ -155,8 +155,8 @@ class BaseModel
 		}
 
 		if ($result < 1) {
-			$this->logger->error("SQL did not complete the camper insert.");
-			$this->logger->error($sql, $parameters);
+			PluginLogger::log("SQL did not complete the camper insert.");
+			PluginLogger::log($sql, $parameters);
 		}
 
 
