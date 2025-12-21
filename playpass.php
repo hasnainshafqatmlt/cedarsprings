@@ -40,7 +40,7 @@ $playPassManager = new PlayPassManager($logger);
 $playPassManager->setCQModel($CQModel);
 
 // Confirm that the user is still logged in and their session has not expired
-print_r($_COOKIE);
+// Store validated credentials in session for secure AJAX requests (avoids passing in POST body)
 if (empty($_COOKIE['key']) || empty($_COOKIE['account']) || !$validator->validate($_COOKIE['key'], $_COOKIE['account'])) {
     // Instruct the grid to collect login info
     setCookie('reAuth', 'submitForm', time() + 3600, '/camps/queue');
@@ -50,6 +50,11 @@ if (empty($_COOKIE['key']) || empty($_COOKIE['account']) || !$validator->validat
     echo '<script>window.location.href = "/camps/queue";</script>';
     exit;
 }
+
+// Store validated credentials in session for AJAX requests
+// This allows AJAX to use session instead of passing credentials in POST body
+$_SESSION['ultracamp_auth_key'] = $_COOKIE['key'];
+$_SESSION['ultracamp_auth_account'] = $_COOKIE['account'];
 
 // Get available weeks
 $summerWeeks = $playPassManager->getAvailableWeeks();
@@ -122,7 +127,8 @@ $extCareCostFormatted = '$' . number_format($extCareCost, 2);
         </div>
 
         <!-- Main form -->
-        <form id="playPassForm" method="post" action="processPlayPass.php">
+        <form id="playPassForm" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>">
+            <input type="hidden" name="action" value="processPlayPass">
             <!-- Camper selection section -->
             <div class="play-pass-section" id="camper-selection">
                 <h3>1. Select Camper</h3>
@@ -458,4 +464,5 @@ wp_enqueue_style('bootstrap-modal-css', plugin_dir_url(__FILE__) . 'css/bootstra
 
     var defaultContactFormTopic = "Day Camps";
     var adminAjaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+    var formBaseUrl = '<?php echo plugin_dir_url(__FILE__) . 'playpass/'; ?>';
 </script>

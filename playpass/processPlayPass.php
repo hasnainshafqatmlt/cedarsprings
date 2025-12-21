@@ -5,22 +5,6 @@ session_start();
 
 // Use an .env to ensure that we know what environment we are in.
 $isDevEnvironment = false;
-// $envPath = __DIR__ . '/../../../../.env';
-// if (file_exists($envPath)) {
-//     $envLines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-//     foreach ($envLines as $line) {
-//         // Skip comments and empty lines
-//         if (empty($line) || strpos(trim($line), '#') === 0) {
-//             continue;
-//         }
-
-//         // Look for APP_ENV setting
-//         if (preg_match('/^APP_ENV\s*=\s*(\w+)/', $line, $matches)) {
-//             $isDevEnvironment = (trim($matches[1]) === 'development');
-//             break;
-//         }
-//     }
-// }
 
 
 require_once(plugin_dir_path(__FILE__) . '../counter/view_counter.php');
@@ -28,7 +12,7 @@ $counter = new ViewCounter();
 $counter->recordVisit('/camps/queue/process', $_SERVER['REMOTE_ADDR']);
 
 // get the logger
-require_once './logger/plannerLogger.php';
+// require_once './logger/plannerLogger.php';
 
 // disable debugging if we're not in dev
 // if ($isDevEnvironment) {
@@ -36,7 +20,7 @@ require_once './logger/plannerLogger.php';
 // }
 
 // Check login status
-require_once '../classes/ValidateLogin.php';
+require_once __DIR__ . '/../classes/ValidateLogin.php';
 $validator = new ValidateLogin($logger);
 
 // Required classes
@@ -45,11 +29,55 @@ require_once __DIR__ . '/../classes/PlayPassManager.php';
 require_once __DIR__ . '/../includes/ultracamp.php';
 require_once __DIR__ . '/../classes/UltracampCart.php';
 
+// SECURE APPROACH: Use session-based authentication
+$authKey = null;
+$authAccount = null;
+
+// Try session first (most secure)
+if (!empty($_SESSION['ultracamp_auth_key']) && !empty($_SESSION['ultracamp_auth_account'])) {
+    $authKey = $_SESSION['ultracamp_auth_key'];
+    $authAccount = $_SESSION['ultracamp_auth_account'];
+
+    if (!$validator->validate($authKey, $authAccount)) {
+        unset($_SESSION['ultracamp_auth_key']);
+        unset($_SESSION['ultracamp_auth_account']);
+        $authKey = null;
+        $authAccount = null;
+    }
+}
+
+// Fallback to cookies
+if (empty($authKey) || empty($authAccount)) {
+    if (!empty($_COOKIE['key']) && !empty($_COOKIE['account'])) {
+        $authKey = $_COOKIE['key'];
+        $authAccount = $_COOKIE['account'];
+
+        if ($validator->validate($authKey, $authAccount)) {
+            $_SESSION['ultracamp_auth_key'] = $authKey;
+            $_SESSION['ultracamp_auth_account'] = $authAccount;
+        }
+    }
+}
+
+// Last resort: POST body (for path-restricted cookies)
+if (empty($authKey) || empty($authAccount)) {
+    $postKey = filter_input(INPUT_POST, 'key', FILTER_SANITIZE_STRING);
+    $postAccount = filter_input(INPUT_POST, 'account', FILTER_SANITIZE_STRING);
+
+    if (!empty($postKey) && !empty($postAccount) && $validator->validate($postKey, $postAccount)) {
+        $authKey = $postKey;
+        $authAccount = $postAccount;
+        $_SESSION['ultracamp_auth_key'] = $authKey;
+        $_SESSION['ultracamp_auth_account'] = $authAccount;
+    }
+}
+
 // Confirm that the user is still logged in
-if (empty($_COOKIE['key']) || empty($_COOKIE['account']) || !$validator->validate($_COOKIE['key'], $_COOKIE['account'])) {
+if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $authAccount)) {
     // Redirect back to login
     setCookie('reAuth', 'submitForm', time() + 3600, '/camps/queue');
-    echo '<script>window.location.href = "/camps/queue";</script>';
+    echo json_encode(['success' => false, 'error' => 'Authentication required']);
+    // echo '<script>window.location.href = "/camps/queue";</script>';
     exit;
 }
 
@@ -73,7 +101,19 @@ $friendsList = filter_input(INPUT_POST, 'friends', FILTER_SANITIZE_STRING);
 if (!$camperId || !$weekNum || empty($selectedDays) || empty($transportationWindow)) {
     PluginLogger::log("Invalid Play Pass registration data");
     $_SESSION['playPassError'] = 'Invalid registration data. Please try again.';
-    echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+
+    // Check if this is a WordPress AJAX request
+    $isAjaxRequest = defined('DOING_AJAX') && DOING_AJAX;
+    if ($isAjaxRequest) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid registration data. Please try again.',
+            'redirect' => '/camps/queue/playpass'
+        ]);
+    } else {
+        echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+    }
     exit;
 }
 
@@ -84,7 +124,19 @@ if (!$editMode && isset($_SESSION['playPassSelections']) && !empty($_SESSION['pl
             // Duplicate found - set error message and redirect
             PluginLogger::log("Duplicate Play Pass registration attempted for camper $camperId in week $weekNum");
             $_SESSION['playPassError'] = 'This camper is already registered for the selected week. Please edit the existing selection instead.';
-            echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+
+            // Check if this is a WordPress AJAX request
+            $isAjaxRequest = defined('DOING_AJAX') && DOING_AJAX;
+            if ($isAjaxRequest) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'This camper is already registered for the selected week. Please edit the existing selection instead.',
+                    'redirect' => '/camps/queue/playpass'
+                ]);
+            } else {
+                echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+            }
             exit;
         }
     }
@@ -144,6 +196,9 @@ PluginLogger::log("Play Pass registration data", $registrationData);
 // Process registration
 $result = $playPassManager->processRegistration($registrationData);
 
+// Check if this is a WordPress AJAX request
+$isAjaxRequest = defined('DOING_AJAX') && DOING_AJAX;
+
 if ($result['success']) {
     // Add cart entry to session
     if (!isset($_SESSION['playPassSelections'])) {
@@ -158,12 +213,36 @@ if ($result['success']) {
     // Set success message
     $_SESSION['playPassMessage'] = 'Play Pass added to cart! You can add more or proceed to checkout.';
 
-    // Redirect back to play pass page
-    echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+    // Handle response based on request type
+    if ($isAjaxRequest) {
+        // Return JSON for AJAX requests
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'message' => $_SESSION['playPassMessage'],
+            'redirect' => '/camps/queue/playpass'
+        ]);
+    } else {
+        // Redirect for normal form submissions
+        echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+    }
     exit;
 } else {
     // Error - redirect back to form with error message
     $_SESSION['playPassError'] = $result['message'];
-    echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+
+    // Handle response based on request type
+    if ($isAjaxRequest) {
+        // Return JSON for AJAX requests
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'message' => $result['message'],
+            'redirect' => '/camps/queue/playpass'
+        ]);
+    } else {
+        // Redirect for normal form submissions
+        echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+    }
     exit;
 }

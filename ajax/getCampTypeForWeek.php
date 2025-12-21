@@ -1,25 +1,15 @@
 <?php
-// getPlayPassPricing.php - AJAX endpoint to retrieve dynamic pricing for Play Pass
+// ajax/getCampTypeForWeek.php - Get camp type for a specific week
 
-header('Content-Type: application/json');
+session_start();
 
-// Begin session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Get the logger
-// require_once '../logger/plannerLogger.php';
-
-// Required classes
+// Check login status
 require_once __DIR__ . '/../classes/CQModel.php';
 require_once __DIR__ . '/../classes/ValidateLogin.php';
 require_once __DIR__ . '/../includes/ultracamp.php';
 require_once __DIR__ . '/../classes/PlayPassManager.php';
 
-// Check login status
 $validator = new ValidateLogin($logger);
-
 // SECURE APPROACH: Use session-based authentication
 $authKey = null;
 $authAccount = null;
@@ -28,7 +18,7 @@ $authAccount = null;
 if (!empty($_SESSION['ultracamp_auth_key']) && !empty($_SESSION['ultracamp_auth_account'])) {
     $authKey = $_SESSION['ultracamp_auth_key'];
     $authAccount = $_SESSION['ultracamp_auth_account'];
-    
+
     if (!$validator->validate($authKey, $authAccount)) {
         unset($_SESSION['ultracamp_auth_key']);
         unset($_SESSION['ultracamp_auth_account']);
@@ -42,7 +32,7 @@ if (empty($authKey) || empty($authAccount)) {
     if (!empty($_COOKIE['key']) && !empty($_COOKIE['account'])) {
         $authKey = $_COOKIE['key'];
         $authAccount = $_COOKIE['account'];
-        
+
         if ($validator->validate($authKey, $authAccount)) {
             $_SESSION['ultracamp_auth_key'] = $authKey;
             $_SESSION['ultracamp_auth_account'] = $authAccount;
@@ -54,7 +44,7 @@ if (empty($authKey) || empty($authAccount)) {
 if (empty($authKey) || empty($authAccount)) {
     $postKey = filter_input(INPUT_POST, 'key', FILTER_SANITIZE_STRING);
     $postAccount = filter_input(INPUT_POST, 'account', FILTER_SANITIZE_STRING);
-    
+
     if (!empty($postKey) && !empty($postAccount) && $validator->validate($postKey, $postAccount)) {
         $authKey = $postKey;
         $authAccount = $postAccount;
@@ -63,24 +53,10 @@ if (empty($authKey) || empty($authAccount)) {
     }
 }
 
-// Validate authentication
 if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $authAccount)) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Authentication required',
-        'redirect' => '/camps/queue'
-    ]);
-    exit;
-}
-
-// Get week parameter
-$weekNum = filter_input(INPUT_POST, 'week', FILTER_VALIDATE_INT);
-
-if (!$weekNum) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Invalid week number'
-    ]);
+    // Return error in JSON
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Authentication required']);
     exit;
 }
 
@@ -91,17 +67,39 @@ $CQModel->setUltracampObj($uc);
 $playPassManager = new PlayPassManager($logger);
 $playPassManager->setCQModel($CQModel);
 
-// Get pricing information
-$dayCost = $playPassManager->getPlayPassDayCost($weekNum);
-$lunchCost = $playPassManager->getPlayPassLunchCost($weekNum);
-$extCareCost = $playPassManager->getPlayPassExtCareCost($weekNum);
+// Get parameters
+$camperId = filter_input(INPUT_POST, 'camper_id', FILTER_VALIDATE_INT);
+$weekNum = filter_input(INPUT_POST, 'week_num', FILTER_VALIDATE_INT);
 
-// Return pricing data
-echo json_encode([
+if (!$camperId || !$weekNum) {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+    exit;
+}
+
+// Check for Play Pass registration
+$isPlayPass = $playPassManager->hasPlayPassRegistration($camperId, $weekNum);
+
+// Check for regular camp registration
+$regularCamp = $playPassManager->hasRegularRegistration($camperId, $weekNum);
+
+$result = [
     'success' => true,
-    'dayCost' => $dayCost,
-    'lunchCost' => $lunchCost,
-    'extCareCost' => $extCareCost
-]);
+    'week_number' => $weekNum,
+    'is_play_pass' => false,
+    'camp_name' => ''
+];
 
+if ($isPlayPass) {
+    $result['is_play_pass'] = true;
+    $result['camp_name'] = 'Play Pass';
+} elseif ($regularCamp) {
+    $result['is_play_pass'] = false;
+    $result['camp_name'] = $regularCamp['camp_name'];
+}
+
+PluginLogger::log("debug:: getcampTypeForWeek", $result);
+
+header('Content-Type: application/json');
+echo json_encode($result);
 exit;

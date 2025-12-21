@@ -11,6 +11,54 @@ document.addEventListener("DOMContentLoaded", function () {
   // Store existing selections (will be populated via AJAX)
   let existingSelections = [];
 
+  // Helper function for secure AJAX requests with session-based auth
+  // Tries session first (most secure), falls back to sending credentials if needed
+  function makeSecureAjaxRequest(action, params, onSuccess, onError) {
+    // First attempt: Use session-based auth (no credentials in POST body)
+    const bodyParams = { action, ...params };
+
+    function attemptRequest(includeAuth = false) {
+      if (includeAuth) {
+        const authKey = typeof getCookie === "function" ? getCookie("key") : "";
+        const authAccount =
+          typeof getCookie === "function" ? getCookie("account") : "";
+        if (authKey && authAccount) {
+          bodyParams.key = authKey;
+          bodyParams.account = authAccount;
+        }
+      }
+
+      return fetch(adminAjaxUrl, {
+        method: "POST",
+        credentials: "same-origin", // Important: sends session cookie
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(bodyParams),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // If auth failed, retry with credentials
+          if (
+            !data.success &&
+            (data.message === "Authentication required" ||
+              data.error === "Authentication required")
+          ) {
+            if (!includeAuth) {
+              return attemptRequest(true);
+            }
+          }
+          return data;
+        });
+    }
+
+    return attemptRequest(false)
+      .then(onSuccess)
+      .catch(
+        onError || ((error) => console.error(`Error in ${action}:`, error))
+      );
+  }
+
   const transportationSection = document.getElementById(
     "transportation-section"
   );
@@ -85,18 +133,45 @@ document.addEventListener("DOMContentLoaded", function () {
   function loadExistingSelections(camperId) {
     // console.log("Loading existing selections for camper:", camperId);
 
-    // Get cart selections
-    fetch(adminAjaxUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
+    // SECURE APPROACH: Try session-based auth first (no credentials in POST body)
+    // If that fails, fall back to sending credentials (for path-restricted cookies)
+    function makeRequest(includeAuth = false) {
+      const bodyParams = {
         action: "getExistingSelections",
         camper_id: camperId,
-      }),
-    })
+      };
+
+      // Only include credentials if session auth failed
+      if (includeAuth) {
+        const authKey = typeof getCookie === "function" ? getCookie("key") : "";
+        const authAccount =
+          typeof getCookie === "function" ? getCookie("account") : "";
+        if (authKey && authAccount) {
+          bodyParams.key = authKey;
+          bodyParams.account = authAccount;
+        }
+      }
+
+      return fetch(adminAjaxUrl, {
+        method: "POST",
+        credentials: "same-origin", // Important: sends session cookie
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(bodyParams),
+      });
+    }
+
+    // Try session-based auth first (most secure)
+    makeRequest(false)
       .then((response) => response.json())
+      .then((data) => {
+        // If auth failed, try with credentials as fallback
+        if (!data.success && data.message === "Authentication required") {
+          return makeRequest(true).then((response) => response.json());
+        }
+        return data;
+      })
       .then((data) => {
         // console.log("Existing cart selections data:", data);
         existingSelections = data.selections || [];
@@ -117,28 +192,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Function to get registered weeks for a camper
   function getRegisteredWeeks(camperId) {
-    fetch(adminAjaxUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        action: "getRegisteredWeeks",
-        camper_id: camperId,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    makeSecureAjaxRequest(
+      "getRegisteredWeeks",
+      { camper_id: camperId },
+      (data) => {
         // console.log("Registered weeks data:", data);
-
         if (data.success && data.registeredWeeks) {
           // Highlight weeks that already have registrations
           highlightRegisteredWeeks(data.registeredWeeks);
         }
-      })
-      .catch((error) => {
+      },
+      (error) => {
         console.error("Error loading registered weeks:", error);
-      });
+      }
+    );
   }
 
   // Function to highlight weeks with existing registrations
@@ -529,18 +596,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function updatePricingForWeek(weekNum) {
     if (!weekNum) return;
 
-    fetch(adminAjaxUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        action: "getPlayPassPricing",
-        week: weekNum,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    makeSecureAjaxRequest(
+      "getPlayPassPricing",
+      { week: weekNum },
+      (data) => {
         if (!data.error) {
           // Update pricing data
           currentPricing.dayCost =
@@ -557,10 +616,11 @@ document.addEventListener("DOMContentLoaded", function () {
             )}/day)`;
           }
         }
-      })
-      .catch((error) => {
+      },
+      (error) => {
         console.error("Error loading pricing data:", error);
-      });
+      }
+    );
   }
 
   // Function to load day options via AJAX
@@ -575,25 +635,22 @@ document.addEventListener("DOMContentLoaded", function () {
     daySelection.style.display = "block";
     animateSection("day-selection");
 
-    // Build request data
-    let requestData = `camper=${selectedCamper}&week=${selectedWeek}`;
+    // Build request parameters
+    const params = {
+      camper: selectedCamper,
+      week: selectedWeek,
+    };
 
     // Add edit flag if in edit mode
     if (isEditMode && editIndex >= 0) {
-      requestData += `&edit_mode=1&edit_index=${editIndex}`;
+      params.edit_mode = 1;
+      params.edit_index = editIndex;
     }
-    requestData += `&action=getPlayPassDays`;
 
-    // Make AJAX request to get day options
-    fetch(adminAjaxUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: requestData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    makeSecureAjaxRequest(
+      "getPlayPassDays",
+      params,
+      (data) => {
         // console.log("Day options response:", data);
 
         if (data.error) {
@@ -622,10 +679,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Set up the form based on what we're editing
         if (isEditingRegistration) {
-          // Update form action for editing existing registration
-          document.getElementById("playPassForm").action =
-            "editExistingPlayPass.php";
-          // console.log("Form action changed to editExistingPlayPass.php for editing existing registration");
+          // Update form action for editing existing registration (WordPress AJAX)
+          // Form action is already set to admin-ajax.php, just ensure action field exists
+          let actionField = document
+            .getElementById("playPassForm")
+            .querySelector('input[name="action"]');
+          if (!actionField) {
+            actionField = document.createElement("input");
+            actionField.type = "hidden";
+            actionField.name = "action";
+            document.getElementById("playPassForm").appendChild(actionField);
+          }
+          actionField.value = "editExistingPlayPass";
+          // console.log("Form action changed to WordPress AJAX for editing existing registration");
 
           // Update submit button text
           const submitButton = document.querySelector(
@@ -635,10 +701,18 @@ document.addEventListener("DOMContentLoaded", function () {
             submitButton.textContent = "Update Registration";
           }
         } else if (isEditMode && data.existing_selection) {
-          // Update form action for editing cart item
-          document.getElementById("playPassForm").action =
-            "editPlayPassSelection.php";
-          // console.log("Form action changed to editPlayPassSelection.php for editing cart item");
+          // Update form action for editing cart item (WordPress AJAX)
+          let actionField = document
+            .getElementById("playPassForm")
+            .querySelector('input[name="action"]');
+          if (!actionField) {
+            actionField = document.createElement("input");
+            actionField.type = "hidden";
+            actionField.name = "action";
+            document.getElementById("playPassForm").appendChild(actionField);
+          }
+          actionField.value = "editPlayPassSelection";
+          // console.log("Form action changed to WordPress AJAX for editing cart item");
 
           // Add edit index as hidden field
           let editIndexField = document.getElementById("edit_index");
@@ -659,10 +733,19 @@ document.addEventListener("DOMContentLoaded", function () {
             submitButton.textContent = "Update Selection";
           }
         } else {
-          // Regular mode - new Play Pass registration
-          document.getElementById("playPassForm").action =
-            "processPlayPass.php";
-          // console.log("Form action set to processPlayPass.php for new registration");
+          // Regular mode - new Play Pass registration (WordPress AJAX)
+          // Form action is already set to admin-ajax.php, just ensure action field exists
+          let actionField = document
+            .getElementById("playPassForm")
+            .querySelector('input[name="action"]');
+          if (!actionField) {
+            actionField = document.createElement("input");
+            actionField.type = "hidden";
+            actionField.name = "action";
+            document.getElementById("playPassForm").appendChild(actionField);
+          }
+          actionField.value = "processPlayPass";
+          // console.log("Form action set to WordPress AJAX for new registration");
 
           // Update submit button text
           const submitButton = document.querySelector(
@@ -674,12 +757,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         renderDayOptions(data);
-      })
-      .catch((error) => {
+      },
+      (error) => {
         console.error("Error:", error);
         dayList.innerHTML =
           '<p class="error">Error loading day options. Please try again.</p>';
-      });
+      }
+    );
   }
 
   // Function to render day options
@@ -1532,10 +1616,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Update form action and button text for editing registration
     if (isEditingRegistration) {
-      // Change form action to the special editing endpoint
+      // Change form action to WordPress AJAX for editing
       const form = document.getElementById("playPassForm");
       if (form) {
-        form.action = "editExistingPlayPass.php";
+        let actionField = form.querySelector('input[name="action"]');
+        if (!actionField) {
+          actionField = document.createElement("input");
+          actionField.type = "hidden";
+          actionField.name = "action";
+          form.appendChild(actionField);
+        }
+        actionField.value = "editExistingPlayPass";
 
         // Also add a hidden field to indicate this is an edit to an existing registration
         let editRegistrationField =
@@ -1633,15 +1724,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return false;
       }
+      // Prevent default form submission - we'll use AJAX instead
+      event.preventDefault();
+
+      // Remove any existing hidden fields to avoid duplicates
+      const existingCamperId = this.querySelector('input[name="camper_id"]');
+      const existingWeekNum = this.querySelector('input[name="week_num"]');
+      const existingTransport = this.querySelector(
+        'input[name="transportation_window"][type="hidden"]'
+      );
+      const existingEditMode = this.querySelector('input[name="edit_mode"]');
+      const existingEditIndex = this.querySelector('input[name="edit_index"]');
+
+      if (existingCamperId) existingCamperId.remove();
+      if (existingWeekNum) existingWeekNum.remove();
+      if (existingTransport) existingTransport.remove();
+      if (existingEditMode) existingEditMode.remove();
+      if (existingEditIndex) existingEditIndex.remove();
 
       // All valid, add hidden fields with selected values
       if (selectedCamperElem && selectedWeekElem && transportationWindow) {
+        // Add camper_id (PHP expects this name, form has selected_camper)
         const camperInput = document.createElement("input");
         camperInput.type = "hidden";
         camperInput.name = "camper_id";
         camperInput.value = selectedCamperElem.value;
         this.appendChild(camperInput);
 
+        // Add week_num (PHP expects this name, form has selected_week)
         const weekInput = document.createElement("input");
         weekInput.type = "hidden";
         weekInput.name = "week_num";
@@ -1662,21 +1772,112 @@ document.addEventListener("DOMContentLoaded", function () {
           editModeInput.name = "edit_mode";
           editModeInput.value = "1";
           this.appendChild(editModeInput);
+
+          // Add edit_index if available
+          if (editIndex >= 0) {
+            const editIndexInput = document.createElement("input");
+            editIndexInput.type = "hidden";
+            editIndexInput.name = "edit_index";
+            editIndexInput.value = editIndex;
+            this.appendChild(editIndexInput);
+          }
         }
       }
 
-      return true;
+      // Ensure action is set for WordPress AJAX
+      // Check if action field already exists (set by other parts of the code)
+      let actionField = this.querySelector('input[name="action"]');
+      if (!actionField) {
+        actionField = document.createElement("input");
+        actionField.type = "hidden";
+        actionField.name = "action";
+        this.appendChild(actionField);
+        // Default to processPlayPass if not already set
+        actionField.value = "processPlayPass";
+      }
+      // If action field exists but is empty, set default
+      if (!actionField.value) {
+        actionField.value = "processPlayPass";
+      }
+
+      // Show loading state
+      const submitButton = this.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton ? submitButton.textContent : "";
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Processing...";
+      }
+
+      // Get form data
+      const formData = new FormData(this);
+
+      // Submit via WordPress AJAX
+      fetch(adminAjaxUrl, {
+        method: "POST",
+        credentials: "same-origin",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle JSON response from WordPress AJAX
+          if (data.success) {
+            // Success - redirect to playpass page
+            window.location.href = data.redirect || "/camps/queue/playpass";
+          } else {
+            // Error - show message and re-enable button
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
+
+            // Show error message
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "play-pass-message error";
+            errorDiv.textContent =
+              data?.message ||
+              data?.error ||
+              "An error occurred. Please try again.";
+            const messagesContainer =
+              document.getElementById("messages-container");
+            messagesContainer.insertBefore(
+              errorDiv,
+              messagesContainer.firstChild
+            );
+            messagesContainer.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error submitting form:", error);
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+          }
+
+          // Show error message
+          const errorDiv = document.createElement("div");
+          errorDiv.className = "play-pass-message error";
+          errorDiv.textContent = "An error occurred. Please try again.";
+          const messagesContainer =
+            document.getElementById("messages-container");
+          messagesContainer.insertBefore(
+            errorDiv,
+            messagesContainer.firstChild
+          );
+        });
     });
 });
 
 function removeSelection(index) {
   if (confirm("Are you sure you want to remove this selection?")) {
-    fetch("removePlayPassSelection.php", {
+    fetch(adminAjaxUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `index=${index}`,
+      body: `action=removePlayPassSelection&index=${index}`,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -1695,12 +1896,12 @@ function removeSelection(index) {
 
 function removeEdit(editId) {
   if (confirm("Are you sure you want to remove this edit?")) {
-    fetch("removePlayPassEdit.php", {
+    fetch(adminAjaxUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `edit_id=${editId}`,
+      body: `action=removePlayPassEdit&edit_id=${editId}`,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -1720,15 +1921,10 @@ function removeEdit(editId) {
 // Function to get registration details for a camper
 function getRegistrationDetails(camperId) {
   return new Promise((resolve, reject) => {
-    fetch("ajax/getRegisteredWeeks.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `camper_id=${camperId}`,
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    makeSecureAjaxRequest(
+      "getRegisteredWeeks",
+      { camper_id: camperId },
+      (data) => {
         if (data.success) {
           // Get details for each registered week
           const registeredWeeks = data.registeredWeeks || [];
@@ -1740,15 +1936,10 @@ function getRegistrationDetails(camperId) {
 
           // Get camp type information for each week
           const requests = registeredWeeks.map((weekNum) => {
-            return fetch("ajax/getCampTypeForWeek.php", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-              body: `camper_id=${camperId}&week_num=${weekNum}`,
-            })
-              .then((response) => response.json())
-              .then((weekData) => {
+            makeSecureAjaxRequest(
+              "getCampTypeForWeek",
+              { camper_id: camperId, week_num: weekNum },
+              (weekData) => {
                 if (weekData.success) {
                   return {
                     week_number: weekNum,
@@ -1757,14 +1948,14 @@ function getRegistrationDetails(camperId) {
                   };
                 }
                 return null;
-              })
-              .catch((error) => {
-                console.error(
-                  `Error getting camp type for week ${weekNum}:`,
-                  error
-                );
-                return null;
-              });
+              }
+            ).catch((error) => {
+              console.error(
+                `Error getting camp type for week ${weekNum}:`,
+                error
+              );
+              return null;
+            });
           });
 
           Promise.all(requests)
@@ -1778,11 +1969,11 @@ function getRegistrationDetails(camperId) {
         } else {
           resolve([]);
         }
-      })
-      .catch((error) => {
-        console.error("Error getting registered weeks:", error);
-        reject(error);
-      });
+      }
+    ).catch((error) => {
+      console.error("Error getting registered weeks:", error);
+      reject(error);
+    });
   });
 }
 

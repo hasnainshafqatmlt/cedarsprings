@@ -61,6 +61,18 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_getPlayPassPricing', 'handle_getPlayPassPricing_ajax');
         add_action('wp_ajax_getPlayPassDays', 'handle_getPlayPassDays_ajax');
         add_action('wp_ajax_nopriv_getPlayPassDays', 'handle_getPlayPassDays_ajax');
+        add_action('wp_ajax_getCampTypeForWeek', 'handle_getCampTypeForWeek_ajax');
+        add_action('wp_ajax_nopriv_getCampTypeForWeek', 'handle_getCampTypeForWeek_ajax');
+        add_action('wp_ajax_processPlayPass', 'handle_processPlayPass_ajax');
+        add_action('wp_ajax_nopriv_processPlayPass', 'handle_processPlayPass_ajax');
+        add_action('wp_ajax_editExistingPlayPass', 'handle_editExistingPlayPass_ajax');
+        add_action('wp_ajax_nopriv_editExistingPlayPass', 'handle_editExistingPlayPass_ajax');
+        add_action('wp_ajax_editPlayPassSelection', 'handle_editPlayPassSelection_ajax');
+        add_action('wp_ajax_nopriv_editPlayPassSelection', 'handle_editPlayPassSelection_ajax');
+        add_action('wp_ajax_removePlayPassSelection', 'handle_removePlayPassSelection_ajax');
+        add_action('wp_ajax_nopriv_removePlayPassSelection', 'handle_removePlayPassSelection_ajax');
+        add_action('wp_ajax_removePlayPassEdit', 'handle_removePlayPassEdit_ajax');
+        add_action('wp_ajax_nopriv_removePlayPassEdit', 'handle_removePlayPassEdit_ajax');
     }
 
     public function init()
@@ -105,7 +117,7 @@ class CustomLoginPlugin
             }
         }
 
-        wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '2.0.0', true);
+        wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '3.0.0', true);
         if ($should_enqueue_login_script) {
             wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
             wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js', array('jquery'), '3.0.0', true);
@@ -444,5 +456,37 @@ function handle_getPlayPassPricing_ajax()
 function handle_getPlayPassDays_ajax()
 {
     include plugin_dir_path(__FILE__) . 'ajax/getPlayPassDays.php';
+    wp_die();
+}
+function handle_getCampTypeForWeek_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'ajax/getCampTypeForWeek.php';
+    wp_die();
+}
+function handle_processPlayPass_ajax()
+{
+    // Include the processPlayPass.php file which contains all the processing logic
+    // This maintains all existing functionality while making it WordPress-compatible
+    include plugin_dir_path(__FILE__) . 'playpass/processPlayPass.php';
+    wp_die();
+}
+function handle_editExistingPlayPass_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'playpass/editExistingPlayPass.php';
+    wp_die();
+}
+function handle_editPlayPassSelection_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'playpass/editPlayPassSelection.php';
+    wp_die();
+}
+function handle_removePlayPassSelection_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'playpass/removePlayPassSelection.php';
+    wp_die();
+}
+function handle_removePlayPassEdit_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'playpass/removePlayPassEdit.php';
     wp_die();
 }

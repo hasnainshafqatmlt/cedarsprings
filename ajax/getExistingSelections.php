@@ -9,10 +9,71 @@ require_once __DIR__ . '/../classes/ValidateLogin.php';
 // require_once __DIR__ . '../logger/plannerLogger.php';
 $validator = new ValidateLogin($logger);
 
-if (empty($_COOKIE['key']) || empty($_COOKIE['account']) || !$validator->validate($_COOKIE['key'], $_COOKIE['account'])) {
+// SECURE APPROACH: Use session-based authentication
+// After initial validation on playpass.php, credentials are stored in session
+// This avoids passing sensitive data in POST body
+
+// First, try to get auth from session (preferred - most secure)
+$authKey = null;
+$authAccount = null;
+
+if (!empty($_SESSION['ultracamp_auth_key']) && !empty($_SESSION['ultracamp_auth_account'])) {
+    $authKey = $_SESSION['ultracamp_auth_key'];
+    $authAccount = $_SESSION['ultracamp_auth_account'];
+
+    // Validate session-based auth
+    if ($validator->validate($authKey, $authAccount)) {
+        // Session auth is valid, proceed
+    } else {
+        // Session auth expired or invalid, clear it
+        unset($_SESSION['ultracamp_auth_key']);
+        unset($_SESSION['ultracamp_auth_account']);
+        $authKey = null;
+        $authAccount = null;
+    }
+}
+
+// Fallback: If session doesn't have auth, try cookies (for backwards compatibility)
+if (empty($authKey) || empty($authAccount)) {
+    if (!empty($_COOKIE['key']) && !empty($_COOKIE['account'])) {
+        $authKey = $_COOKIE['key'];
+        $authAccount = $_COOKIE['account'];
+
+        // If cookies are valid, store in session for future requests
+        if ($validator->validate($authKey, $authAccount)) {
+            $_SESSION['ultracamp_auth_key'] = $authKey;
+            $_SESSION['ultracamp_auth_account'] = $authAccount;
+        }
+    }
+}
+
+// Last resort: Accept from POST body (less secure, but needed for path-restricted cookies)
+// This is a temporary workaround - session-based auth is preferred
+if (empty($authKey) || empty($authAccount)) {
+    $postKey = filter_input(INPUT_POST, 'key', FILTER_SANITIZE_STRING);
+    $postAccount = filter_input(INPUT_POST, 'account', FILTER_SANITIZE_STRING);
+
+    if (!empty($postKey) && !empty($postAccount)) {
+        // Validate POST credentials
+        if ($validator->validate($postKey, $postAccount)) {
+            $authKey = $postKey;
+            $authAccount = $postAccount;
+
+            // Store in session for future requests (so we don't need POST next time)
+            $_SESSION['ultracamp_auth_key'] = $authKey;
+            $_SESSION['ultracamp_auth_account'] = $authAccount;
+        }
+    }
+}
+
+// Final validation
+if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $authAccount)) {
     // Return error in JSON
     header('Content-Type: application/json');
-    echo json_encode(['success' => false, 'message' => 'Authentication required', 'key' => $_COOKIE]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Authentication required'
+    ]);
     exit;
 }
 

@@ -182,7 +182,7 @@ class EmailChangeOrder
 
         //if(false) {
         if (!$mail->Send()) {
-            $this->logger->error("Unable to send the change order email: " . $mail->ErrorInfo);
+            PluginLogger::log("error:: Unable to send the change order email: " . $mail->ErrorInfo);
             return false;
         }
 

@@ -1,23 +1,10 @@
 <?php
-// getPlayPassPricing.php - AJAX endpoint to retrieve dynamic pricing for Play Pass
+// removePlayPassEdit.php - Remove a Play Pass edit from the session
 
-header('Content-Type: application/json');
-
-// Begin session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Get the logger
-// require_once '../logger/plannerLogger.php';
-
-// Required classes
-require_once __DIR__ . '/../classes/CQModel.php';
-require_once __DIR__ . '/../classes/ValidateLogin.php';
-require_once __DIR__ . '/../includes/ultracamp.php';
-require_once __DIR__ . '/../classes/PlayPassManager.php';
+session_start();
 
 // Check login status
+require_once __DIR__ . '/../classes/ValidateLogin.php';
 $validator = new ValidateLogin($logger);
 
 // SECURE APPROACH: Use session-based authentication
@@ -28,7 +15,7 @@ $authAccount = null;
 if (!empty($_SESSION['ultracamp_auth_key']) && !empty($_SESSION['ultracamp_auth_account'])) {
     $authKey = $_SESSION['ultracamp_auth_key'];
     $authAccount = $_SESSION['ultracamp_auth_account'];
-    
+
     if (!$validator->validate($authKey, $authAccount)) {
         unset($_SESSION['ultracamp_auth_key']);
         unset($_SESSION['ultracamp_auth_account']);
@@ -42,7 +29,7 @@ if (empty($authKey) || empty($authAccount)) {
     if (!empty($_COOKIE['key']) && !empty($_COOKIE['account'])) {
         $authKey = $_COOKIE['key'];
         $authAccount = $_COOKIE['account'];
-        
+
         if ($validator->validate($authKey, $authAccount)) {
             $_SESSION['ultracamp_auth_key'] = $authKey;
             $_SESSION['ultracamp_auth_account'] = $authAccount;
@@ -54,7 +41,7 @@ if (empty($authKey) || empty($authAccount)) {
 if (empty($authKey) || empty($authAccount)) {
     $postKey = filter_input(INPUT_POST, 'key', FILTER_SANITIZE_STRING);
     $postAccount = filter_input(INPUT_POST, 'account', FILTER_SANITIZE_STRING);
-    
+
     if (!empty($postKey) && !empty($postAccount) && $validator->validate($postKey, $postAccount)) {
         $authKey = $postKey;
         $authAccount = $postAccount;
@@ -63,45 +50,32 @@ if (empty($authKey) || empty($authAccount)) {
     }
 }
 
-// Validate authentication
+// Confirm that the user is still logged in
 if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $authAccount)) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Authentication required',
-        'redirect' => '/camps/queue'
-    ]);
+    // Return error in JSON
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Authentication required']);
     exit;
 }
 
-// Get week parameter
-$weekNum = filter_input(INPUT_POST, 'week', FILTER_VALIDATE_INT);
+// Get edit ID
+$editId = filter_input(INPUT_POST, 'edit_id', FILTER_SANITIZE_STRING);
 
-if (!$weekNum) {
-    echo json_encode([
-        'success' => false,
-        'error' => 'Invalid week number'
-    ]);
+if (empty($editId) || !isset($_SESSION['playPassEdits'][$editId])) {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => false, 'message' => 'Invalid edit ID']);
     exit;
 }
 
-// Initialize necessary classes
-$uc = new UltracampModel($logger);
-$CQModel = new CQModel($logger);
-$CQModel->setUltracampObj($uc);
-$playPassManager = new PlayPassManager($logger);
-$playPassManager->setCQModel($CQModel);
+// Remove the edit
+unset($_SESSION['playPassEdits'][$editId]);
 
-// Get pricing information
-$dayCost = $playPassManager->getPlayPassDayCost($weekNum);
-$lunchCost = $playPassManager->getPlayPassLunchCost($weekNum);
-$extCareCost = $playPassManager->getPlayPassExtCareCost($weekNum);
+// If no more edits, remove the edits array
+if (empty($_SESSION['playPassEdits'])) {
+    unset($_SESSION['playPassEdits']);
+}
 
-// Return pricing data
-echo json_encode([
-    'success' => true,
-    'dayCost' => $dayCost,
-    'lunchCost' => $lunchCost,
-    'extCareCost' => $extCareCost
-]);
-
+// Return success
+header('Content-Type: application/json');
+echo json_encode(['success' => true]);
 exit;
