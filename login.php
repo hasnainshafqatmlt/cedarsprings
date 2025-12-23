@@ -33,6 +33,7 @@ class CustomLoginPlugin
         add_shortcode('create_account_shortcode', array($this, 'handle_create_account_shortcode'));
         add_shortcode('create_add_person', array($this, 'handle_create_add_person'));
         add_shortcode('create_playpass', array($this, 'handle_create_playpass'));
+        add_shortcode('complete_playpass_registration', array($this, 'handle_completePlayPassRegistration'));
         // Register logout AJAX
         add_action('wp_ajax_custom_logout', array($this, 'handle_logout_ajax'));
         add_action('wp_ajax_nopriv_custom_logout', array($this, 'handle_logout_ajax'));
@@ -73,6 +74,10 @@ class CustomLoginPlugin
         add_action('wp_ajax_nopriv_removePlayPassSelection', 'handle_removePlayPassSelection_ajax');
         add_action('wp_ajax_removePlayPassEdit', 'handle_removePlayPassEdit_ajax');
         add_action('wp_ajax_nopriv_removePlayPassEdit', 'handle_removePlayPassEdit_ajax');
+        add_action('wp_ajax_processPlayPassCheckout', 'handle_processPlayPassCheckout_ajax');
+        add_action('wp_ajax_nopriv_processPlayPassCheckout', 'handle_processPlayPassCheckout_ajax');
+        add_action('wp_ajax_processPlayPassCart', 'handle_processPlayPassCart_ajax');
+        add_action('wp_ajax_nopriv_processPlayPassCart', 'handle_processPlayPassCart_ajax');
     }
 
     public function init()
@@ -388,6 +393,15 @@ class CustomLoginPlugin
         include plugin_dir_path(__FILE__) . 'playpass.php';
         return ob_get_clean();
     }
+    public function handle_completePlayPassRegistration($atts)
+    {
+        if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
+            return '<!-- hidden in editor -->';
+        }
+        ob_start();
+        include plugin_dir_path(__FILE__) . 'completePlayPassRegistration.php';
+        return ob_get_clean();
+    }
 }
 
 // Initialize the plugin
@@ -488,5 +502,15 @@ function handle_removePlayPassSelection_ajax()
 function handle_removePlayPassEdit_ajax()
 {
     include plugin_dir_path(__FILE__) . 'playpass/removePlayPassEdit.php';
+    wp_die();
+}
+function handle_processPlayPassCheckout_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'playpass/processPlayPassCheckout.php';
+    wp_die();
+}
+function handle_processPlayPassCart_ajax()
+{
+    include plugin_dir_path(__FILE__) . 'playpass/processPlayPassCart.php';
     wp_die();
 }

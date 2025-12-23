@@ -55,7 +55,7 @@ class CQModel
     function getCamperName($camperId)
     {
         if (empty($camperId)) {
-            wp_die("No camper ID was specificed in getCamperName()");
+            PluginLogger::log("No camper ID was specificed in getCamperName()");
             return false;
         }
 
@@ -70,7 +70,7 @@ class CQModel
         try {
             $camper = $this->db->runQuery($sql, 'i', $camperId);
         } catch (Exception $e) {
-            wp_die("Unable to query the campers table for camper $camperId: " . $e->getMessage());
+            PluginLogger::log("Unable to query the campers table for camper $camperId: " . $e->getMessage());
             // continue - we'll try UC next
         }
 
@@ -89,7 +89,7 @@ class CQModel
         try {
             $camper = $this->uc->getPersonById($camperId);
         } catch (Exception $e) {
-            wp_die("Unable to get the camper name from Ultracamp in getCamperName()");
+            PluginLogger::log("Unable to get the camper name from Ultracamp in getCamperName()");
             return false;
         }
 
@@ -103,7 +103,7 @@ class CQModel
     function getCamp($campId)
     {
         if (empty($campId)) {
-            wp_die("No camp ID was specificed in getCamp()");
+            PluginLogger::log("No camp ID was specificed in getCamp()");
             return false;
         }
 
@@ -111,7 +111,7 @@ class CQModel
         try {
             $result = $this->db->runQuery($sql, 'i', $campId);
         } catch (Exception $e) {
-            wp_die("Unable to retrive the camp name from the database in getCamp(): " . $e->getMessage());
+            PluginLogger::log("Unable to retrive the camp name from the database in getCamp(): " . $e->getMessage());
             return false;
         }
 
@@ -126,7 +126,7 @@ class CQModel
     function getWeek($weekNum)
     {
         if (empty($weekNum)) {
-            wp_die("No week number specificed for getWeek()");
+            PluginLogger::log("No week number specificed for getWeek()");
             return false;
         }
 
@@ -134,7 +134,7 @@ class CQModel
         try {
             $result = $this->db->runQuery($sql, 'i', $weekNum);
         } catch (Exception $e) {
-            wp_die("Unable to retrieve the week information from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to retrieve the week information from the database: " . $e->getMessage());
             return false;
         }
 
@@ -151,7 +151,7 @@ class CQModel
         try {
             $result = $this->db->runQuery($sql, 'i', $weekNum);
         } catch (Exception $e) {
-            wp_die("Unable to retrieve the sessionID information from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to retrieve the sessionID information from the database: " . $e->getMessage());
             return false;
         }
 
@@ -167,7 +167,7 @@ class CQModel
         try {
             $result = $this->db->runQuery($sql, 'i', $weekNum);
         } catch (Exception $e) {
-            wp_die("Unable to retrieve the sessionID information from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to retrieve the sessionID information from the database: " . $e->getMessage());
             return false;
         }
 
@@ -183,7 +183,7 @@ class CQModel
         try {
             $result = $this->db->runQuery($sql, 'i', $weekNum);
         } catch (Exception $e) {
-            wp_die("Unable to retrieve the week start date information from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to retrieve the week start date information from the database: " . $e->getMessage());
             return false;
         }
 
@@ -211,9 +211,11 @@ class CQModel
     {
 
         // start with getting all of the people
+        PluginLogger::log(' **** in 4-2');
         $people = $this->uc->getPeopleByAccount($accountId);
+        PluginLogger::log(' **** in 4-3');
         if (empty($people)) {
-            wp_die("Ultracamp returned an invalid response for the people on the account.");
+            PluginLogger::log("Ultracamp returned an invalid response for the people on the account.");
             return false;
         }
 
@@ -242,12 +244,12 @@ class CQModel
         try {
             $result = $this->db->runBaseQuery($sql);
         } catch (Exception $e) {
-            wp_die("Unable to collect any weeks from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to collect any weeks from the database: " . $e->getMessage());
             return false;
         }
 
         if (!is_array($result)) {
-            wp_die("There was an error reading the highest week number in the CQModel.php getAge method.");
+            PluginLogger::log("There was an error reading the highest week number in the CQModel.php getAge method.");
             return false;
         }
 
@@ -268,7 +270,7 @@ class CQModel
         try {
             $result = $this->db->runQuery($sql, 'i', $week);
         } catch (Exception $e) {
-            wp_die("Unable to collect the startdate for week $week from the database: " . $e->getMessage());
+            PluginLogger::log("Unable to collect the startdate for week $week from the database: " . $e->getMessage());
             return false;
         }
 

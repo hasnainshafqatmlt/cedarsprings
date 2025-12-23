@@ -65,9 +65,10 @@ class UltracampModel
 
         $this->setURL($url);
 
+        PluginLogger::log(' *** in processRequest fucntion setURL:: ', $this->ucCurl);
+        PluginLogger::log("this->url", $this->url);
         $result = curl_exec($this->ucCurl);
         PluginLogger::log("Ultracamp API Time", curl_getinfo($this->ucCurl, CURLINFO_TOTAL_TIME));
-        PluginLogger::log($this->url);
 
         /* This type of result will come back on error
 		

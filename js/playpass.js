@@ -2077,3 +2077,74 @@ function addDayCellClickHandlers() {
     });
   });
 }
+
+function handleProcessPlayPassCheckout() {
+  const payload = new URLSearchParams({
+    action: "processPlayPassCheckout",
+  });
+  const submitButton = document.getElementById("playpass-checkout-btn");
+  const originalButtonText = submitButton ? submitButton.textContent : "";
+  fetch(adminAjaxUrl, {
+    method: "POST",
+    credentials: "same-origin",
+    body: payload,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Handle JSON response from WordPress AJAX
+      if (data.success) {
+        // Success - redirect to playpass page
+        if (data.redirect) {
+          window.location.href = data.redirect || "/camps/queue/playpass";
+        } else if (data?.action) {
+          fetch(adminAjaxUrl, {
+            method: "POST",
+            credentials: "same-origin",
+            body: new URLSearchParams({
+              action: "processPlayPassCart",
+            }),
+          })
+            .then((response) => response.json())
+            .then((x) => {
+              if (x.redirect) {
+                window.location.href = data.redirect || "/camps/queue/playpass";
+              }
+            });
+        }
+      } else {
+        // Error - show message and re-enable button
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
+
+        // Show error message
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "play-pass-message error";
+        errorDiv.textContent =
+          data?.message ||
+          data?.error ||
+          "An error occurred. Please try again.";
+        const messagesContainer = document.getElementById("messages-container");
+        messagesContainer.insertBefore(errorDiv, messagesContainer.firstChild);
+        messagesContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error submitting form:", error);
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+
+      // Show error message
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "play-pass-message error";
+      errorDiv.textContent = "An error occurred. Please try again.";
+      const messagesContainer = document.getElementById("messages-container");
+      messagesContainer.insertBefore(errorDiv, messagesContainer.firstChild);
+    });
+}

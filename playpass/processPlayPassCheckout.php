@@ -59,7 +59,10 @@ if (empty($authKey) || empty($authAccount)) {
 if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $authAccount)) {
     // Redirect back to login
     setCookie('reAuth', 'submitForm', time() + 3600, '/camps/queue');
-    echo '<script>window.location.href = "/camps/queue";</script>';
+    echo json_encode([
+        'success' => true,
+        'redirect' => '/camps/queue'
+    ]);
     exit;
 }
 
@@ -74,7 +77,10 @@ $hasEdits = !empty($_SESSION['playPassEdits']);
 
 // If we have no items to process, redirect back
 if (!$hasNewSelections && !$hasEdits) {
-    echo '<script>window.location.href = "/camps/queue/playpass";</script>';
+    echo json_encode([
+        'success' => true,
+        'redirect' => '/camps/queue/playpass'
+    ]);
     exit;
 }
 
@@ -157,9 +163,16 @@ if ($hasEdits) {
 // Always process cart for new selections if they exist
 if ($hasNewSelections) {
     // If we have new registrations, process them through the cart
-    header('Location: processPlayPassCart.php');
+    echo json_encode([
+        'success' => true,
+        'action' => 'processPlayPassCart'
+        // 'redirect' => '/camps/queue/completePlayPassRegistration'
+    ]);
 } else {
     // If we only have edits (no new registrations), go directly to completion page
-    header('Location: completePlayPassRegistration.php');
+    echo json_encode([
+        'success' => true,
+        'redirect' => '/camps/queue/completePlayPassRegistration'
+    ]);
 }
 exit;

@@ -76,7 +76,7 @@ if (empty($authKey) || empty($authAccount)) {
 if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $authAccount)) {
     // Redirect back to login
     setCookie('reAuth', 'submitForm', time() + 3600, '/camps/queue');
-    echo json_encode(['success' => false, 'error' => 'Authentication required']);
+    echo json_encode(['success' => true, 'error' => 'Authentication required', 'redirect' => '/camps/queue']);
     // echo '<script>window.location.href = "/camps/queue";</script>';
     exit;
 }
@@ -107,7 +107,7 @@ if (!$camperId || !$weekNum || empty($selectedDays) || empty($transportationWind
     if ($isAjaxRequest) {
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => false,
+            'success' => true,
             'message' => 'Invalid registration data. Please try again.',
             'redirect' => '/camps/queue/playpass'
         ]);
@@ -130,7 +130,7 @@ if (!$editMode && isset($_SESSION['playPassSelections']) && !empty($_SESSION['pl
             if ($isAjaxRequest) {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'success' => false,
+                    'success' => true,
                     'message' => 'This camper is already registered for the selected week. Please edit the existing selection instead.',
                     'redirect' => '/camps/queue/playpass'
                 ]);
@@ -236,7 +236,7 @@ if ($result['success']) {
         // Return JSON for AJAX requests
         header('Content-Type: application/json');
         echo json_encode([
-            'success' => false,
+            'success' => true,
             'message' => $result['message'],
             'redirect' => '/camps/queue/playpass'
         ]);
