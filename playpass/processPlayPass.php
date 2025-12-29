@@ -153,7 +153,7 @@ PluginLogger::log("Form submission data:", [
 // Make sure to pass the exact value from the form
 $registrationData = [
     'camper_id' => $camperId,
-    'account_id' => $_COOKIE['account'],
+    'account_id' => $authAccount,
     'week' => $weekNum,
     'days' => [],
     'lunch' => [],

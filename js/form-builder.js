@@ -220,7 +220,7 @@ function createRow(campName, camp, camper) {
 
   // Title column HTML
   /*	cellTitle.innerHTML = isPlayPass
-		? '<a href="#" data-toggle="modal" data-target="#myModal" data-camp="' + campId + '" class="' + highlightedName + '">' + campIcon + campName + '</a><br /><a href="playpass.php" class="play-pass-registration-link">Daily Registration</a>'
+		? '<a href="#" data-toggle="modal" data-target="#myModal" data-camp="' + campId + '" class="' + highlightedName + '">' + campIcon + campName + '</a><br /><a href="playpass" class="play-pass-registration-link">Daily Registration</a>'
 		: '<a href="#" data-toggle="modal" data-target="#myModal" data-camp="' + campId + '" class="' + highlightedName + '">' + campIcon + campName + '</a>';
 */
   cellTitle.innerHTML = isPlayPass
@@ -271,7 +271,7 @@ function createRow(campName, camp, camper) {
           newCell.classList.add("availableCamp");
           newCell.classList.add("play-pass-row");
           newCell.innerHTML =
-            '<a class="playpass-button" href="playpass.php">Daily<br />Registration</a>';
+            '<a class="playpass-button" href="/camps/queue/playpass/">Daily<br />Registration</a>';
           break;
       }
 

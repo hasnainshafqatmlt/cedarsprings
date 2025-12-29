@@ -184,6 +184,14 @@
   display: flex
 }
 
+.tw-hidden {
+  display: none
+}
+
+.tw-h-80 {
+  height: 20rem
+}
+
 .tw-w-full {
   width: 100%
 }
@@ -218,6 +226,10 @@
 
 .tw-items-center {
   align-items: center
+}
+
+.tw-justify-center {
+  justify-content: center
 }
 
 .tw-justify-between {
@@ -309,6 +321,16 @@
   padding: 1rem
 }
 
+.\!tw-px-\[20px\] {
+  padding-left: 20px !important;
+  padding-right: 20px !important
+}
+
+.\!tw-py-\[18px\] {
+  padding-top: 18px !important;
+  padding-bottom: 18px !important
+}
+
 .tw-px-4 {
   padding-left: 1rem;
   padding-right: 1rem
@@ -359,6 +381,11 @@
   padding-bottom: 20px
 }
 
+.tw-px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem
+}
+
 .tw-pb-\[12px\] {
   padding-bottom: 12px
 }
@@ -373,6 +400,10 @@
 
 .tw-text-center {
   text-align: center
+}
+
+.\!tw-text-\[22px\] {
+  font-size: 22px !important
 }
 
 .tw-text-2xl {
@@ -392,6 +423,15 @@
 .tw-text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem
+}
+
+.tw-text-\[40px\] {
+  font-size: 40px
+}
+
+.tw-text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem
 }
 
 .tw-font-bold {
@@ -601,13 +641,38 @@
 }
 
 @media (min-width: 768px) {
+  .md\:tw-flex {
+    display: flex
+  }
+
+  .md\:tw-h-auto {
+    height: auto
+  }
+
+  .md\:tw-w-\[50\%\] {
+    width: 50%
+  }
+
   .md\:tw-flex-row {
     flex-direction: row
+  }
+
+  .md\:tw-justify-center {
+    justify-content: center
+  }
+
+  .md\:tw-justify-between {
+    justify-content: space-between
   }
 
   .md\:tw-px-\[66px\] {
     padding-left: 66px;
     padding-right: 66px
+  }
+
+  .md\:tw-px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem
   }
 }
 

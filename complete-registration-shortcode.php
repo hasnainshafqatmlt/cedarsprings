@@ -106,12 +106,13 @@ function complete_registration_shortcode($atts)
                             <div class="fh5co-v-half camp-row">
                                 <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
                                     <span class="pricing">One Final Step</span>
-                                    <a href="<?php echo  $ucLink; ?>" class="btn-green" id="loginBtn" target=_BLANK style="max-width: 300px; margin: 0 auto 20px;">
-                                        Complete Registration</a>
-                                    <p class="description ">Click the button above to review your order, setup your payment method, and complete your summer registration.</p>
+                                    
+                                    <p class="description ">Click the button below to review your order, setup your payment method, and complete your summer registration.</p>
                                     <p class="description ">Shortly after you have completed the payment process (by clicking the button above), you will receive confirmation emails detailing your summer schedule, and the payment receipts.</p>
                                     <p class="description" style="font-weight:bold">We're excited to host your family at camp.<br /> - Long Live Summer!</p>
 
+                                    <a href="<?php echo  $ucLink; ?>" class="btn-green" id="loginBtn" target=_BLANK style="max-width: 300px; margin: 0 auto 20px;">
+                                        Complete Registration</a>
 
 
                                 </div>
@@ -190,9 +191,12 @@ function complete_registration_shortcode($atts)
                         }
 
                         ?>
+
+                        <?php /*
                         <div style="width:100%; max-width: 300px; text-align:center; margin: 30px auto 0;">
                             <a href="/camps/queue/status/" class="btn-green" style="margin-bottom:15px;">Review Camper Status</a>
                         </div>
+                        */ ?>
                     </div>
                 </div>
             </div>

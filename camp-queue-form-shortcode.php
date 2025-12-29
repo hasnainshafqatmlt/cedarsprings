@@ -30,12 +30,14 @@ function custom_camp_queue_form_shortcode($atts)
             <p>Welcome, <span id="contactName"></span></p>
             <div class="logout-link"><a href="javascript:" onclick="return customLogout()" class="text-white">LOG OUT</a></div>
             <div>
-                <button type="button" class="btn btn-info">
-                    Current Registrations and Queues
-                </button>
+                <a href="/camps/queue/status/" class="tw-inline-block">
+                    <button type="button" class="btn btn-info">
+                        Current Registrations and Queues
+                    </button>
+                </a>
             </div>
             <div>
-                <a href="/camps/queue/addperson/<?= $queryparams ?>" class=" tw-inline-block tw-cursor-pointer">
+                <a href="/camps/queue/addperson/<?= $queryparams ?>" class="tw-inline-block tw-cursor-pointer">
                     <button type="button" class="btn btn-primary">
                         Add A Camper
                     </button>

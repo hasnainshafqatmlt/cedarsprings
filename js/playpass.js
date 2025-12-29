@@ -2084,6 +2084,10 @@ function handleProcessPlayPassCheckout() {
   });
   const submitButton = document.getElementById("playpass-checkout-btn");
   const originalButtonText = submitButton ? submitButton.textContent : "";
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Processing...";
+  }
   fetch(adminAjaxUrl, {
     method: "POST",
     credentials: "same-origin",
@@ -2107,7 +2111,7 @@ function handleProcessPlayPassCheckout() {
             .then((response) => response.json())
             .then((x) => {
               if (x.redirect) {
-                window.location.href = data.redirect || "/camps/queue/playpass";
+                window.location.href = x.redirect || "/camps/queue/playpass";
               }
             });
         }

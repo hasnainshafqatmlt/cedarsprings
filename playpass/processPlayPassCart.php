@@ -84,7 +84,7 @@ if (empty($authKey) || empty($authAccount) || !$validator->validate($authKey, $a
 PluginLogger::log((' **** in 3'));
 // IMPORTANT: Validate the account key with Ultracamp
 // This sets up the API key for subsequent cart operations
-if (!$cart->validateAccountKey($_COOKIE['key'], $_COOKIE['account'])) {
+if (!$cart->validateAccountKey($authKey, $authAccount)) {
     PluginLogger::log("error:: Failed to validate account key with Ultracamp");
     setCookie('reAuth', 'submitForm', time() + 3600, '/camps/queue');
     echo json_encode([
@@ -111,7 +111,7 @@ $_SESSION['displayError'] = false;
 PluginLogger::log(' **** in 4-1');
 // Store the camper information for access in the model
 
-$CQModel->setCampersByAccount(FILTER_VAR($_COOKIE['account'], FILTER_VALIDATE_INT));
+$CQModel->setCampersByAccount(FILTER_VAR($authAccount, FILTER_VALIDATE_INT));
 PluginLogger::log((' **** in 5'));
 // Process Play Pass entries
 $cartOptions = [];
@@ -139,12 +139,12 @@ PluginLogger::log((' **** in 6'));
 // Add entries to cart
 if (!empty($cartOptions)) {
     PluginLogger::log("debug:: Adding Play Pass entries to cart", [
-        'account' => $_COOKIE['account'],
+        'account' => $authAccount,
         'numOptions' => count($cartOptions),
         'cartOptions' => $cartOptions
     ]);
 
-    if (!$cart->addEntriesToCart($_COOKIE['account'], $cartOptions)) {
+    if (!$cart->addEntriesToCart($authAccount, $cartOptions)) {
         $_SESSION['displayRegistration'] = false;
         $_SESSION['displayError'] = true;
         PluginLogger::log("error:: Failed to create cart for Play Pass registrations");
@@ -171,7 +171,7 @@ $_SESSION['playPassData'] = null;
 // Redirect to completion page
 echo json_encode([
     'success' => true,
-    'redirect' => '/camps/queue/completePlayPassRegistration'
+    'redirect' => '/camps/queue/completeplaypassregistration'
 ]);
 
 exit;

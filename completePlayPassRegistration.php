@@ -52,15 +52,15 @@ $counter->recordVisit('/camps/queue/completePlayPassRegistration', $_SERVER['REM
                 if ($displayError) {
                 ?>
                     <!-- The Error section -->
-                    <div class="fh5co-v-half camp-row">
-                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
-                            <span class="pricing">Uh Oh....</span>
+                    <div class="fh5co-v-half camp-row tw-flex tw-flex-col md:tw-flex-row tw-w-full tw-mb-5">
+                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1 tw-w-full md:tw-w-[50%] md:tw-px-5">
+                            <span class="pricing tw-text-center tw-text-[40px] tw-mb-4 tw-inline-block tw-w-full">Uh Oh....</span>
 
                             <p class="description">We are afraid that something has gone terribly and horribly wrong.</p>
                             <p class="description">This generally happens when our payment processing vendor is unable to take the registration request due to technical issues. We know that this is very inconvenient, and we are sorry for the hassle!</p>
                             <p class="description">All is not lost however. We have recorded your camp selections into our camper queue system, saving your camper's choices and place in the camps selected. You will get an email shortly with the opportunity to retry processing the reservation, and hopefully the technical issues will be sorted out.</p>
                         </div>
-                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/summer/images/error-no-signal.jpg); background-position: top"></div>
+                        <div class="fh5co-v-col-2 fh5co-bg-img tw-w-full md:tw-w-[50%] tw-h-80 md:tw-h-auto" style="background-image: url(/wp-content/uploads/2025/11/grid-price.jpg); background-position: top"></div>
                     </div>
                 <?php
                 }
@@ -69,16 +69,16 @@ $counter->recordVisit('/camps/queue/completePlayPassRegistration', $_SERVER['REM
                 if ($displayRegistration && !empty($ucLink)) :
                 ?>
                     <!-- The registration section -->
-                    <div class="fh5co-v-half camp-row">
-                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
-                            <span class="pricing">One Final Step</span>
-                            <a href="<?php echo $ucLink; ?>" class="btn btn-complete-registration" id="loginBtn" target=_BLANK>
+                    <div class="fh5co-v-half camp-row tw-flex tw-flex-col md:tw-flex-row tw-w-full tw-mb-5">
+                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1 tw-w-full md:tw-w-[50%] md:tw-px-5">
+                            <span class="pricing tw-text-center tw-text-[40px] tw-mb-4 tw-inline-block tw-w-full">One Final Step</span>
+                            <a href="<?php echo $ucLink; ?>" class="tw-btn-secondary tw-inline-block tw-w-full tw-text-center tw-mb-4" id="loginBtn" target=_BLANK>
                                 Click Here to <br />Complete Registration</a>
                             <p class="description">Click the button above to review your order, setup your payment method, and complete your summer registration.</p>
                             <p class="description">Shortly after you have completed the payment process (by clicking the button above), you will receive confirmation emails detailing your summer schedule, and the payment receipts.</p>
                             <p class="description" style="font-weight:bold">We're excited to host your family at camp.<br /> - Long Live Summer!</p>
                         </div>
-                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/summer/images/grid-price.jpg); background-position: top"></div>
+                        <div class="fh5co-v-col-2 fh5co-bg-img tw-w-full md:tw-w-[50%] tw-h-80 md:tw-h-auto" style="background-image: url(/wp-content/uploads/2025/11/grid-price.jpg); background-position: top"></div>
                     </div>
                 <?php
                 endif;
@@ -91,9 +91,9 @@ $counter->recordVisit('/camps/queue/completePlayPassRegistration', $_SERVER['REM
                     unset($_SESSION['playPassEditsCount']);
                 ?>
                     <!-- Play Pass Edits Section -->
-                    <div class="fh5co-v-half camp-row">
-                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1">
-                            <span class="pricing">Play Pass Registration Updates</span>
+                    <div class="fh5co-v-half camp-row tw-flex tw-flex-col md:tw-flex-row tw-w-full tw-mb-5">
+                        <div class="fh5co-v-col-2 fh5co-text fh5co-special-1 tw-w-full md:tw-w-[50%] md:tw-px-5">
+                            <span class="pricing tw-text-center tw-text-[40px] tw-mb-4 tw-inline-block tw-w-full">Play Pass Registration Updates</span>
 
                             <h3 style="margin-top: 0; color: #ffffff;">Your changes have been submitted!</h3>
                             <p class="description">We have received your request to update <?php echo $editsCount; ?> existing Play Pass registration<?php echo $editsCount !== 1 ? 's' : ''; ?>. Our office staff will process these changes within 2 business days.</p>
@@ -101,13 +101,13 @@ $counter->recordVisit('/camps/queue/completePlayPassRegistration', $_SERVER['REM
                             </p>
                             <p class="description">If you have any questions about these changes, please contact our office at <strong>camps@cedarsprings.camp</strong> or call <strong>(425) 334-6215</strong>.</p>
                         </div>
-                        <div class="fh5co-v-col-2 fh5co-bg-img" style="background-image: url(/camps/summer/images/grid-price.jpg); background-position: top"></div>
+                        <div class="fh5co-v-col-2 fh5co-bg-img tw-w-full md:tw-w-[50%] tw-h-80 md:tw-h-auto" style="background-image: url(/wp-content/uploads/2025/11/grid-price.jpg); background-position: top"></div>
                     </div>
                 <?php
                 endif;
                 ?>
                 <div style="width:100%; text-align:center">
-                    <a href="/camps/queue/status/" class="btn btn-title-action btn-outline no-top-padding" style="margin-bottom:15px;">Review Camper Status</a>
+                    <a href="/camps/queue/status/" class="tw-btn-secondary tw-text-xl" style="margin-bottom:15px;">Review Camper Status</a>
                 </div>
             </div>
         </div>

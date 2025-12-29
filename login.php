@@ -116,7 +116,8 @@ class CustomLoginPlugin
 
             if ($post instanceof WP_Post && (has_shortcode($post->post_content, 'create_account_shortcode') ||
                 has_shortcode($post->post_content, 'create_add_person') ||
-                has_shortcode($post->post_content, 'create_playpass')
+                has_shortcode($post->post_content, 'create_playpass') ||
+                has_shortcode($post->post_content, 'complete_playpass_registration')
             )) {
                 $should_enqueue_login_script = false;
             }
@@ -124,7 +125,7 @@ class CustomLoginPlugin
 
         wp_enqueue_script('custom-cookie-management', plugin_dir_url(__FILE__) . 'js/cookie-management.js', array('jquery'), '3.0.0', true);
         if ($should_enqueue_login_script) {
-            wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '1.0.0', true);
+            wp_enqueue_script('custom-camp-form-builder', plugin_dir_url(__FILE__) . 'js/form-builder.js', array('jquery'), '2.0.0', true);
             wp_enqueue_script('custom-camp-camper-action', plugin_dir_url(__FILE__) . 'js/camper-action.js', array('jquery'), '3.0.0', true);
 
             wp_enqueue_script('custom-login-js', plugin_dir_url(__FILE__) . 'js/login-action.js', array('jquery'), '1.0.0', true);
