@@ -8,6 +8,7 @@ class PluginLogger
     private static $log_dir;
     private static $log_file;
     private static $current_date;
+    private static $isLogEnabled = false;
 
     public static function init()
     {
@@ -24,6 +25,11 @@ class PluginLogger
 
     public static function log($message, $context = null)
     {
+        // Exit early in production
+        if (!self::$isLogEnabled) {
+            return;
+        }
+
         // Rotate to a new file when the date changes
         if (!self::$log_file || self::$current_date !== date('Y-m-d')) {
             self::init();
