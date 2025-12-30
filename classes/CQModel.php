@@ -211,7 +211,7 @@ class CQModel
     {
 
         // start with getting all of the people
-        PluginLogger::log(' **** in 4-2', $accountId);
+        PluginLogger::log(' **** in 4-2');
         $people = $this->uc->getPeopleByAccount($accountId);
         PluginLogger::log(' **** in 4-3');
         if (empty($people)) {

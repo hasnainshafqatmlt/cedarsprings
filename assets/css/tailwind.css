@@ -184,14 +184,6 @@
   display: flex
 }
 
-.tw-hidden {
-  display: none
-}
-
-.tw-h-80 {
-  height: 20rem
-}
-
 .tw-w-full {
   width: 100%
 }
@@ -226,10 +218,6 @@
 
 .tw-items-center {
   align-items: center
-}
-
-.tw-justify-center {
-  justify-content: center
 }
 
 .tw-justify-between {
@@ -427,11 +415,6 @@
 
 .tw-text-\[40px\] {
   font-size: 40px
-}
-
-.tw-text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem
 }
 
 .tw-font-bold {
@@ -641,28 +624,12 @@
 }
 
 @media (min-width: 768px) {
-  .md\:tw-flex {
-    display: flex
-  }
-
-  .md\:tw-h-auto {
-    height: auto
-  }
-
   .md\:tw-w-\[50\%\] {
     width: 50%
   }
 
   .md\:tw-flex-row {
     flex-direction: row
-  }
-
-  .md\:tw-justify-center {
-    justify-content: center
-  }
-
-  .md\:tw-justify-between {
-    justify-content: space-between
   }
 
   .md\:tw-px-\[66px\] {
